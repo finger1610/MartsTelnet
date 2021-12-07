@@ -5,27 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MartsTelnet"
         mc:Ignorable="d"
-        Title="MainWindow" Height="425" Width="506">
+        Title="TelnetRunner" Height="425" Width="506">
     <Grid>
         <Label Content="Login" HorizontalAlignment="Left" Margin="44,20,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.641,0.585" Grid.Column="1"/>
         <Label Content="password" HorizontalAlignment="Left" Margin="23,46,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Label Content="File to IP.txt" HorizontalAlignment="Left" Margin="16,69,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Label Content="Port" HorizontalAlignment="Left" Margin="53,95,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+
+        <Label x:Name="lblFindIP" Content="Label" HorizontalAlignment="Left" Margin="242,46,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="#FF2DF500" Grid.Column="1"/>
+        <Label x:Name="lblComAdd" Content="Команды добавлены" HorizontalAlignment="Left" Margin="223,107,0,0" VerticalAlignment="Top" Visibility="Hidden" Grid.Column="1"/>
+
+
+
         <TextBox x:Name="txtoxLogin" HorizontalAlignment="Left" Margin="88,27,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
         <PasswordBox x:Name="txtboxPassword" HorizontalAlignment="Left" Margin="88,50,0,0" VerticalAlignment="Top" Width="120" Password="" Grid.Column="1"/>
-        <TextBox x:Name="txtboxPort" HorizontalAlignment="Left" Margin="88,99,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="23" Grid.Column="1"/>
-        <Label Content="Port" HorizontalAlignment="Left" Margin="53,95,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <Label Content="File to IP.txt" HorizontalAlignment="Left" Margin="16,69,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <TextBox x:Name="txtboxIP" HorizontalAlignment="Left" Margin="88,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="txtboxIP_TextChanged" Grid.Column="1"/>
-        <Button x:Name="btnConnect" Content="Run" HorizontalAlignment="Left" Margin="160,133,0,0" VerticalAlignment="Top" Click="btnConnect_Click" IsEnabled="False" Grid.Column="1"/>
+        <TextBox x:Name="txtboxIP" HorizontalAlignment="Left" Margin="88,73,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="120" TextChanged="txtboxIP_TextChanged" Grid.Column="1"/>
         <Button x:Name="btnFileDialog" Content="..." HorizontalAlignment="Left" Margin="213,72,0,0" VerticalAlignment="Top" Click="btnFileDialog_Click" Grid.Column="1"/>
         <Button x:Name="btncheckList" Content="Проверить список" HorizontalAlignment="Left" Margin="242,72,0,0" VerticalAlignment="Top" Width="106" Click="btncheckList_Click" IsEnabled="False" Grid.Column="1"/>
-        <Button x:Name="btnTestConnect" Content="TestConnect" HorizontalAlignment="Left" Margin="64,133,0,0" VerticalAlignment="Top" IsEnabled="False" Click="btnTestConnect_Click" Grid.Column="1"/>
-        <Label x:Name="lblFindIP" Content="Label" HorizontalAlignment="Left" Margin="242,46,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="#FF2DF500" Grid.Column="1"/>
-        <ProgressBar x:Name="prgBar" HorizontalAlignment="Left" Height="12" Margin="28,232,0,0" VerticalAlignment="Top" Width="382"/>
-        <Label x:Name="lblProgress" Content="0/0" HorizontalAlignment="Left" Margin="429,225,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtboxPort" HorizontalAlignment="Left" Margin="88,99,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="23" Grid.Column="1"/>
         <Button x:Name="btnAddComands" Content="Команды" HorizontalAlignment="Left" Margin="261,133,0,0" VerticalAlignment="Top" Click="btnAddComands_Click" Grid.Column="1"/>
-        <Label x:Name="lblComAdd" Content="Команды добавлены" HorizontalAlignment="Left" Margin="223,107,0,0" VerticalAlignment="Top" Visibility="Hidden" Grid.Column="1"/>
+
+        <Button x:Name="btnConnect" Content="Run" HorizontalAlignment="Left" Margin="160,133,0,0" VerticalAlignment="Top" Click="btnConnect_Click" IsEnabled="False" Grid.Column="1"/>
+        <Button x:Name="btnTestConnect" Content="TestConnect" HorizontalAlignment="Left" Margin="64,133,0,0" VerticalAlignment="Top" IsEnabled="False" Click="btnTestConnect_Click" Grid.Column="1"/>
         <Button x:Name="btnShowLog" Content="Log" HorizontalAlignment="Left" Margin="160,168,0,0" VerticalAlignment="Top" Click="btnShow_Click" IsEnabled="False" Grid.Column="1"/>
-        <Button x:Name="btnFails" Content="Ошибки:   " HorizontalAlignment="Left" Margin="387,256,0,0" VerticalAlignment="Top" Foreground="#FFF50000" Width="70" Click="btnFails_Click" IsEnabled="False"/>
+
+        <ProgressBar x:Name="prgBar" HorizontalAlignment="Left" Height="12" Margin="28,232,0,0" VerticalAlignment="Top" Width="382" Visibility="Hidden"/>
+        <Label x:Name="lblProgress" Content="0/0" HorizontalAlignment="Left" Margin="429,225,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
+        <Button x:Name="btnFails" Content="Ошибки:   " HorizontalAlignment="Left" Margin="387,256,0,0" VerticalAlignment="Top" Foreground="#FFF50000" Width="70" Click="btnFails_Click" Visibility="Hidden"/>
+        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="213,256,0,0" VerticalAlignment="Top" Click="btnStop_Click" Height="32" Width="48" IsEnabled="False" Visibility="Hidden"/>
 
     </Grid>
 </Window>

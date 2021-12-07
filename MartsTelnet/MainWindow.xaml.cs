@@ -21,10 +21,12 @@ namespace MartsTelnet
         List<string> _commands;
         List<string> _log;
         List<string> _fails;
+        bool isRun = true;
 
         public MainWindow()
         {
             _devices = new List<string>();
+            _log = new List<string>();
             _commands = new List<string>();
             _fails = new List<string>();
             InitializeComponent();
@@ -143,30 +145,60 @@ namespace MartsTelnet
             showList.ShowDialog();
         }
 
+        void isEnableElements(bool status)
+        {
+            txtoxLogin.IsEnabled = status;
+            txtboxPassword.IsEnabled = status;
+
+            txtboxIP.IsEnabled = status;
+            btnFileDialog.IsEnabled = status;
+            btncheckList.IsEnabled = status;
+
+            txtboxPort.IsEnabled = status;
+            btnAddComands.IsEnabled = status;
+
+            btnTestConnect.IsEnabled = status;
+            btnConnect.IsEnabled = status;
+            btnShowLog.IsEnabled = status;
+        }
+
         private async void btnConnect_Click(object sender, RoutedEventArgs e)
         {
-            _log = null;
+            //Обнуляем значения
+            _log.Clear();
             _fails.Clear();
-            prgBar.Value = 0.0;
+            prgBar.Value = 0;
+            isRun = true;
             prgBar.Maximum = _devices.Count;
             lblProgress.Content = prgBar.Value + "/" + prgBar.Maximum;
 
+            //отключаем элементы управления
+            isEnableElements(false);
 
+            //включаем отображение прогресс бара и счетчика
             prgBar.Visibility = Visibility.Visible;
             lblProgress.Visibility = Visibility.Visible;
-
+            btnStop.Visibility = Visibility.Visible;
+            btnStop.IsEnabled = true;
 
             myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password,"",Convert.ToInt32(txtboxPort.Text));
             session.addComands(_commands);
 
-
             foreach (string device in _devices)
             {
+                if (!isRun)
+                {
+                    MessageBox.Show("Процесс остановлен");
+                    _log.Add((_log.Count + 1).ToString() + ") " + device + "\n" + "Процесс остановлен");
+                    break;
+                }
+
                 session._ip = device;
 
                 if (await Task.Run(() => session.runCommands()))
                 {
-                    lblProgress.Content = session.log.Count + "/" + prgBar.Maximum;
+                    _log.Add((_log.Count + 1).ToString() + ") "+ device +" \n"+ session.log);
+                    lblProgress.Content = _log.Count + "/" + prgBar.Maximum;
                 }
                 else
                 {
@@ -174,21 +206,19 @@ namespace MartsTelnet
                     btnFails.Visibility = Visibility.Visible;
                     btnFails.Content = " Ошибки: " + _fails.Count().ToString();
                 }
-                prgBar.Value += 1.0;
+                prgBar.Value++;
             }
 
-            _log = session.log;
-            session.log = null;
-            btnShowLog.IsEnabled = true;
+
+            isEnableElements(true);
+            btnStop.Visibility = Visibility.Hidden;
+            btnStop.IsEnabled = false;
+
             if (_fails.Count != 0)
                 btnFails.IsEnabled = true;
 
         }
 
-        private void PrgBar_ValueChanged(object sender, ProgressChangedEventArgs e)
-        {
-            prgBar.Value = e.ProgressPercentage;
-        }
 
         private void btnFails_Click(object sender, RoutedEventArgs e)
         {
@@ -198,8 +228,9 @@ namespace MartsTelnet
 
         }
 
-
-
-
+        private void btnStop_Click(object sender, RoutedEventArgs e)
+        {
+            isRun = false;
+        }
     }
 }

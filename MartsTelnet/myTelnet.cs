@@ -14,7 +14,7 @@ namespace MartsTelnet
         int _port;
         public string _ip;
         List<string> _commands;
-        public List<string> log;
+        public string log ="";
 
 
 
@@ -26,16 +26,10 @@ namespace MartsTelnet
             _ip = ip;
             _port = port;
             _commands = new List<string>();
-            log = new List<string>();
+          
 
         }
         public myTelnet(string user, string password, string ip) : this(user, password, ip, 23) { }
-
-
-        public void addComands(string command)
-        {
-            _commands.Add(command);
-        }
 
 
         public void addComands(List<string> commands)
@@ -43,19 +37,13 @@ namespace MartsTelnet
             foreach (string command in commands)
                 _commands.Add(command);
         }
-        public void clearComands()
+  
+        public void Close()
         {
-            _commands.Clear();
-        }
-
-        public bool clearCommand(string command)
-        {
-            return _commands.Remove(command);
-
+            _commands = null;
         }
         public void testConnect()
         {
-
 
             try
             {
@@ -113,10 +101,9 @@ namespace MartsTelnet
             }
         }
 
-
         public bool runCommands()
-
         {
+            log = "";
             try
             {
                 TcpByteStream tcpByteStream = new TcpByteStream(_ip, _port);
@@ -126,8 +113,8 @@ namespace MartsTelnet
                     using (Client client = new Client(tcpByteStream, System.Threading.CancellationToken.None))
                     {
 
-                     //  if ( client.TryLoginAsync(_user, _password, 2000).Result==true)
-
+                     //  if ( client.TryLoginAsync(_user, _password, 2000))
+                     
 
                         client.WriteLine(_user);
                         client.WriteLine(_password);
@@ -144,7 +131,7 @@ namespace MartsTelnet
                         //    Thread.Sleep(100);
                         //    client.WriteLine(command);
                         //}
-                        log.Add(client.ReadAsync().Result);
+                        log = client.ReadAsync().Result;
 
                         client.Dispose();
 
