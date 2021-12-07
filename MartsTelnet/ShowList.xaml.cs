@@ -17,7 +17,7 @@ namespace MartsTelnet
     /// </summary>
     public partial class ShowList : Window
     {
-        string _device = "";
+        string _device = "10.222.8.10";
         readonly List<string> _IP;
 
         public ShowList(List<string> ip)
@@ -26,9 +26,13 @@ namespace MartsTelnet
             InitializeComponent();
             lstboxIP.ItemsSource = _IP;
         }
+
+        
+
         private void lstboxIP_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-           //Здесь реализую открытие CLI окна с последующем заходом на железку
+            //Здесь реализую открытие CLI окна с последующем заходом на железку
+
         }
 
         private void btn_Click(object sender, RoutedEventArgs e)

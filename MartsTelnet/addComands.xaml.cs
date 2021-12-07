@@ -36,12 +36,14 @@ namespace MartsTelnet
             string str = new TextRange(rtxtboxCommands.Document.ContentStart, rtxtboxCommands.Document.ContentEnd).Text;
 
             string[] lines = str.Split(new char[] { '\r', '\n' });
-            var point = rtxtboxCommands.Document.ContentStart;
+           // var point = rtxtboxCommands.Document.ContentStart;
 
-            foreach (var row in lines)
+            foreach (string row in lines)
             {
-                _commands.Add(row);
+                if (row != "")
+                    _commands.Add(row);
             }
+            _commands.Add("");
             this.Close();
         }
 
