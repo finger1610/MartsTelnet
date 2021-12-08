@@ -34,7 +34,7 @@ namespace MartsTelnet
             }
         }
         //автоматическая отпрпавка без вывода
-        public bool runCommands(bool showMessage = false)
+        public async Task<bool> runCommands(bool showMessage = false)
         {
             log =_ip+ "\nОшибка соединения";
             try
@@ -42,43 +42,49 @@ namespace MartsTelnet
                 TcpByteStream tcpByteStream = new TcpByteStream(_ip, _port);
                 Thread.Sleep(200);
                 if (tcpByteStream.Connected)
-
                     using (Client client = new Client(tcpByteStream, System.Threading.CancellationToken.None))
                     {
-                       
-                       
-                        client.WriteLine(_user);
-                        client.WriteLine(_password);
-                        Thread.Sleep(100);
-                        log = _ip + "\n" + Task.Run(() => client.ReadAsync().Result).Result.ToString();
 
+                       await client.TryLoginAsync(_user, _password, 2000).ConfigureAwait(true);
+                        log = _ip + "\n" + client.ReadAsync().Result;
+                            foreach (string command in _commands)
+                            {
+                                if (!tcpByteStream.Connected)
+                                    return false;
+                                client.WriteLine(command);
+                                Thread.Sleep(50);
+                            }
 
-                        client.WriteLine("");
-                        foreach (string command in _commands)
-                        {
-                            if (!tcpByteStream.Connected)
+                            log = _ip + "\n" + Task.Run(() => client.ReadAsync()).ToString();
+                            if (log == _ip + "\n")
+                            {
+                                log += "Оборудование недоступно";
                                 return false;
-                            client.WriteLine(command);
-                            Thread.Sleep(50);
-                        }
+                            }
+                            if (showMessage)
+                                MessageBox.Show(log);
 
-                        log = _ip + "\n" + Task.Run(()=> client.ReadAsync().Result).Result.ToString();
+                            client.Dispose();
 
-                        if (log == _ip + "\n")
-                        {
-                            log += "Оборудование недоступно";
-                            return false;
-                        }
-                        if (showMessage)
-                            MessageBox.Show(log);
+                            tcpByteStream.Close();
+                            tcpByteStream.Dispose();
 
-                        client.Dispose();
-
-                        tcpByteStream.Close();
-                        tcpByteStream.Dispose();
-
-                        return true;
+                            return true;
                     }
+                    
+                        //client.WriteLine(_user);
+                        //client.WriteLine(_password);
+                        //Thread.Sleep(100);
+                        //log = _ip + "\n" +(await Task.Run(() => client.ReadAsync().Result.ToString()));
+
+
+                        //client.WriteLine("");
+                 
+
+                       
+
+                       
+                    
             }
             catch (Exception ex)
             {

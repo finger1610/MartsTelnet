@@ -18,7 +18,7 @@ namespace MartsTelnet
     /// </summary>
     public partial class ShowList : Window
     {
-        string _device = "10.222.8.10";
+      //  string _device = "10.222.8.10";
         readonly List<string> _IP;
 
         public ShowList(List<string> ip)
