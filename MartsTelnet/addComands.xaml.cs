@@ -24,9 +24,10 @@ namespace MartsTelnet
             _commands = commands;
             InitializeComponent();
             rtxtboxCommands.Selection.Text = "";
+
             foreach (string str in _commands)
             {
-                rtxtboxCommands.Selection.Text += str + "\r ";
+                rtxtboxCommands.Selection.Text += str + "\r";
             }
             rtxtboxCommands.Selection.Text += "\n";
         }
@@ -35,9 +36,7 @@ namespace MartsTelnet
             _commands.Clear();
             string str = new TextRange(rtxtboxCommands.Document.ContentStart, rtxtboxCommands.Document.ContentEnd).Text;
 
-            string[] lines = str.Split(new char[] { '\r', '\n' });
-           // var point = rtxtboxCommands.Document.ContentStart;
-
+            string[] lines = str.Split(new char[] { '\r', '\n' }); 
             foreach (string row in lines)
             {
                 if (row != "")

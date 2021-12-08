@@ -6,9 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-
-
-
+using System.Windows.Media;
 
 namespace MartsTelnet
 {
@@ -21,7 +19,7 @@ namespace MartsTelnet
         List<string> _commands;
         List<string> _log;
         List<string> _fails;
-        bool isRun = true;
+        bool isRun = true;//флаг для остановки процесса внутри btnConnect_Click
 
         public MainWindow()
         {
@@ -33,33 +31,91 @@ namespace MartsTelnet
         }
 
 
-
-        void checkComblete()
+        /// <summary>
+        /// Проверяет заполненность полей для запуска скрипта
+        /// </summary>
+        private void checkComlete()
         {
-            if (txtoxLogin.Text != "" &&
-                txtboxPassword.Password != "" &&
-                _devices.Count != 0 &&
-                _commands.Count != 0)
-            {
-                btnConnect.IsEnabled = true;
-                btnTestConnect.IsEnabled = true;
-            }
+            if (btnRun != null &&
+            btnTestConnect != null &&
+            chkBoxShowRes != null)
+                if (txtoxLogin.Text != "" &&
+                    txtboxPassword.Password != "" &&
+                    _devices.Count != 0 &&
+                    _commands.Count != 0)
+                {
+                    btnRun.IsEnabled = true;
+                    btnTestConnect.IsEnabled = true;
+                    chkBoxShowRes.IsEnabled = true;
+                }
+                else
+                {
+                    btnRun.IsEnabled = false;
+                    btnTestConnect.IsEnabled = false;
+                    chkBoxShowRes.IsEnabled = false;
+                }
+        }
+
+        /// <summary>
+        /// переключает доступность элементов
+        /// </summary>
+        /// <param name="status"> elements.IsEnabled = true </param>
+        private void isEnableElements(bool status) 
+        {
+            txtoxLogin.IsEnabled = status;
+            txtboxPassword.IsEnabled = status;
+
+            txtboxIP.IsEnabled = status;
+            btnFileDialog.IsEnabled = status;
+            btncheckList.IsEnabled = status;
+
+            txtboxPort.IsEnabled = status;
+            btnAddComands.IsEnabled = status;
+
+            btnTestConnect.IsEnabled = status;
+            btnRun.IsEnabled = status;
+            btnShowLog.IsEnabled = status;
+
+        }
+    
+
+        //Изменения тектБоксов
+        private void txtoxLogin_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            checkComlete();
+
+        }
+        private void txtboxPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            checkComlete();
+        }
+        private void txtboxIP_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (txtboxIP.Text != "")
+                btncheckList.IsEnabled = true;
             else
-            {
-                btnConnect.IsEnabled = false;
-                btnTestConnect.IsEnabled = false;
-            }
+                btncheckList.IsEnabled = false;
+            checkComlete();
         }
-
-
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        private void txtboxPort_TextChanged(object sender, TextChangedEventArgs e)
         {
-            addComands obj1 = new addComands(_commands);
-            obj1.ShowDialog();
-            checkComblete();
+            checkComlete();
         }
 
-
+        //Buttons_click
+        private void btnAddComands_Click(object sender, RoutedEventArgs e)
+        {
+            addComands addComands = new addComands(_commands);
+            addComands.ShowDialog();
+            if (_commands.Count != 0)
+                lblComAdd.Visibility = Visibility.Visible;
+            checkComlete();
+        }
+        private void btnShow_Click(object sender, RoutedEventArgs e)
+        {
+            ShowList showList = new ShowList(_log);
+            showList.ShowDialog();
+        }
         private void btnFileDialog_Click(object sender, RoutedEventArgs e)
         {
             var fileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -85,7 +141,7 @@ namespace MartsTelnet
                                 }
                             }
                         }
-                        checkComblete();
+                        checkComlete();
                     }
                     catch (Exception ex)
                     {
@@ -107,62 +163,20 @@ namespace MartsTelnet
                     break;
             }
         }
-
         private void btncheckList_Click(object sender, RoutedEventArgs e)
         {
             ShowList obj = new ShowList(_devices);
-            obj.ShowDialog();
+            obj.Show();
         }
-
-        private void txtboxIP_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (txtboxIP.Text != "")
-                btncheckList.IsEnabled = true;
-            else
-                btncheckList.IsEnabled = false;
-        }
-
         private void btnTestConnect_Click(object sender, RoutedEventArgs e)
         {
+            isEnableElements(false);
             myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password, _devices[0]);
             session.addComands(_commands);
-            session.testConnect();
-
+            session.runCommands(true);
+            isEnableElements(true);
         }
-
-        private void btnAddComands_Click(object sender, RoutedEventArgs e)
-        {
-            addComands addComands = new addComands(_commands);
-            addComands.ShowDialog();
-            if (_commands.Count != 0)
-                lblComAdd.Visibility = Visibility.Visible;
-            checkComblete();
-        }
-
-        private void btnShow_Click(object sender, RoutedEventArgs e)
-        {
-            ShowList showList = new ShowList(_log);
-            showList.ShowDialog();
-        }
-
-        void isEnableElements(bool status)
-        {
-            txtoxLogin.IsEnabled = status;
-            txtboxPassword.IsEnabled = status;
-
-            txtboxIP.IsEnabled = status;
-            btnFileDialog.IsEnabled = status;
-            btncheckList.IsEnabled = status;
-
-            txtboxPort.IsEnabled = status;
-            btnAddComands.IsEnabled = status;
-
-            btnTestConnect.IsEnabled = status;
-            btnConnect.IsEnabled = status;
-            btnShowLog.IsEnabled = status;
-        }
-
-        private async void btnConnect_Click(object sender, RoutedEventArgs e)
+        private async void btnRun_Click(object sender, RoutedEventArgs e)
         {
             //Обнуляем значения
             _log.Clear();
@@ -171,7 +185,10 @@ namespace MartsTelnet
             isRun = true;
             prgBar.Maximum = _devices.Count;
             lblProgress.Content = prgBar.Value + "/" + prgBar.Maximum;
+            lblStatus.Content = "";
+            lblStatus.Foreground = Brushes.Black;
 
+            bool checkBox;
             //отключаем элементы управления
             isEnableElements(false);
 
@@ -186,23 +203,31 @@ namespace MartsTelnet
 
             foreach (string device in _devices)
             {
+                lblStatus.Content = device + " - Отправка...";
                 if (!isRun)
                 {
-                    MessageBox.Show("Процесс остановлен");
-                    _log.Add((_log.Count + 1).ToString() + ") " + device + "\n" + "Процесс остановлен");
+                    lblStatus.Content = device + " - Процесс остановлен";
+                    MessageBox.Show(lblStatus.Content.ToString());
+                    _log.Add((_log.Count + 1).ToString() + ")" + lblStatus.Content);
+
                     break;
                 }
 
                 session._ip = device;
 
-                if (await Task.Run(() => session.runCommands()))
+                checkBox  = chkBoxShowRes.IsChecked.Value;//если кинуть напрямую в метод, то выдает ошибку доступа
+
+                if (await Task.Run(() =>  session.runCommands(checkBox)))
                 {
-                    _log.Add((_log.Count + 1).ToString() + ") "+ device +" \n"+ session.log);
+                    lblStatus.Content = device + " - Отправлено";
+                    _log.Add((_log.Count + 1).ToString() + ") "+ session.log);
                     lblProgress.Content = _log.Count + "/" + prgBar.Maximum;
                 }
                 else
                 {
-                    _fails.Add(device);
+                    lblStatus.Content = device + " - Ошибка";
+                    _fails.Add(session.log);
+                    _log.Add((_log.Count + 1).ToString() + ") " + session.log);
                     btnFails.Visibility = Visibility.Visible;
                     btnFails.Content = " Ошибки: " + _fails.Count().ToString();
                 }
@@ -213,24 +238,24 @@ namespace MartsTelnet
             isEnableElements(true);
             btnStop.Visibility = Visibility.Hidden;
             btnStop.IsEnabled = false;
-
+            if (isRun)
+            {
+                lblStatus.Content = "Отправка завершена";
+                lblStatus.Foreground = Brushes.Green;
+            }
             if (_fails.Count != 0)
                 btnFails.IsEnabled = true;
 
         }
-
-
         private void btnFails_Click(object sender, RoutedEventArgs e)
         {
-
             ShowList showList = new ShowList(_fails);
             showList.ShowDialog();
-
         }
-
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             isRun = false;
         }
+
     }
 }

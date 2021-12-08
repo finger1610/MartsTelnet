@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -31,8 +32,8 @@ namespace MartsTelnet
 
         private void lstboxIP_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            //Здесь реализую открытие CLI окна с последующем заходом на железку
-
+            //Здесь реализую открытие CLI окна с последующем заходом на железку 
+           
         }
 
         private void btn_Click(object sender, RoutedEventArgs e)
