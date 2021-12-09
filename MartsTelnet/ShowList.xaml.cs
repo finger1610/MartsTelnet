@@ -22,8 +22,9 @@ namespace MartsTelnet
         string _device = "10.222.8.10";
         readonly List<string> _IP;
 
-        public ShowList(List<string> ip)
+        public ShowList(string name,List<string> ip)
         {
+           this.Title = name;
             _IP = ip;
             InitializeComponent();
             lstboxIP.ItemsSource = _IP;
@@ -45,18 +46,18 @@ namespace MartsTelnet
         private void btnSaveToFile_Click(object sender, RoutedEventArgs e)
         {
             var fileDialog = new System.Windows.Forms.SaveFileDialog();
-            fileDialog.FileName = "file";
+            fileDialog.FileName = this.Title;
             fileDialog.Filter = "Текстовые файлы (*.txt)|*.txt|Лог файлы(*.log)|*.log|Все файлы (*.*)|*.*" ;
             var result = fileDialog.ShowDialog();
             switch (result)
             {
                 case System.Windows.Forms.DialogResult.OK:
-                    var file = fileDialog.FileName;
+                    var fileName = fileDialog.FileName;
   
                     //Считывание из файла
                     try
                     {
-                        using (FileStream fs = new FileStream(file, FileMode.OpenOrCreate))
+                        using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
                         {
                             using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
                             {
@@ -67,8 +68,7 @@ namespace MartsTelnet
                                 }
                             }
                         }
-                        MessageBox.Show("Содержимое сохранено в файле " + file);
-                        
+                        MessageBox.Show("Содержимое сохранено в файле " + fileName);                 
                     }
                     catch (Exception ex)
                     {

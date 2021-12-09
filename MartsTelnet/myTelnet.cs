@@ -40,18 +40,16 @@ namespace MartsTelnet
             try
             {
                 TcpByteStream tcpByteStream = new TcpByteStream(_ip, _port);
-                Thread.Sleep(200);
+                Thread.Sleep(1000);
                 if (tcpByteStream.Connected)
 
                     using (Client client = new Client(tcpByteStream, System.Threading.CancellationToken.None))
                     {
-                       
-                       
+  
                         client.WriteLine(_user);
                         client.WriteLine(_password);
-                        Thread.Sleep(100);
+                        Thread.Sleep(1000);
                         log = _ip + "\n" + Task.Run(() => client.ReadAsync().Result).Result.ToString();
-
 
                         client.WriteLine("");
                         foreach (string command in _commands)
@@ -66,7 +64,7 @@ namespace MartsTelnet
 
                         if (log == _ip + "\n")
                         {
-                            log += "Оборудование недоступно";
+                            log += "Ошибка лога";
                             return false;
                         }
                         if (showMessage)

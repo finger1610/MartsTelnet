@@ -113,7 +113,7 @@ namespace MartsTelnet
         }
         private void btnShow_Click(object sender, RoutedEventArgs e)
         {
-            ShowList showList = new ShowList(_log);
+            ShowList showList = new ShowList("Log", _log);
             showList.ShowDialog();
         }
         private void btnFileDialog_Click(object sender, RoutedEventArgs e)
@@ -165,7 +165,7 @@ namespace MartsTelnet
         }
         private void btncheckList_Click(object sender, RoutedEventArgs e)
         {
-            ShowList obj = new ShowList(_devices);
+            ShowList obj = new ShowList("List IP addresses",_devices);
             obj.Show();
         }
         private void btnTestConnect_Click(object sender, RoutedEventArgs e)
@@ -220,17 +220,16 @@ namespace MartsTelnet
                 if (await Task.Run(() =>  session.runCommands(checkBox)))
                 {
                     lblStatus.Content = device + " - Отправлено";
-                    _log.Add((_log.Count + 1).ToString() + ") "+ session.log);
                     lblProgress.Content = _log.Count + "/" + prgBar.Maximum;
                 }
                 else
                 {
                     lblStatus.Content = device + " - Ошибка";
                     _fails.Add(session.log);
-                    _log.Add((_log.Count + 1).ToString() + ") " + session.log);
                     btnFails.Visibility = Visibility.Visible;
                     btnFails.Content = " Ошибки: " + _fails.Count().ToString();
                 }
+                _log.Add((_log.Count + 1).ToString() + ") " + session.log);
                 prgBar.Value++;
             }
 
@@ -249,7 +248,7 @@ namespace MartsTelnet
         }
         private void btnFails_Click(object sender, RoutedEventArgs e)
         {
-            ShowList showList = new ShowList(_fails);
+            ShowList showList = new ShowList("Errors",_fails);
             showList.ShowDialog();
         }
         private void btnStop_Click(object sender, RoutedEventArgs e)
