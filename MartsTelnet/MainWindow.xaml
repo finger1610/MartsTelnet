@@ -73,13 +73,6 @@
             </CheckBox.ToolTip>
         </CheckBox>
         <Label x:Name="lblClock"  HorizontalAlignment="Left" Margin="28,238,0,0" VerticalAlignment="Top" Content=""/>
-        <Label Content="Фильтр" HorizontalAlignment="Left" Margin="33,115,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtboxFilter" HorizontalAlignment="Left" Margin="88,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120">
-            <TextBox.ToolTip>
-                <ToolTip Content="Поиск данного фрагмента после авторизации. Если нет, то разрыв соединения"/>
-            </TextBox.ToolTip>
-            
-        </TextBox>
 
 
     </Grid>
