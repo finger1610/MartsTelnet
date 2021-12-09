@@ -14,8 +14,7 @@ namespace MartsTelnet
         int _port;
         public string _ip;
         List<string> _commands;
-        string _filter = string.Empty;
-        public string _log = string.Empty;
+        public string _log = "";
 
         public myTelnet(string user, string password, string ip, int port,string filter)
         {
@@ -44,7 +43,7 @@ namespace MartsTelnet
         /// <param name="addLog">if true,then _log+=response </param>
         /// <param name="timeout"> timeout*50mc== timeout mc </param>
         /// <returns></returns>
-        private bool response(Client client, bool addLog = false, bool separator = false,int timeout = 100)
+        private bool response(Client client, bool addLog = false,int timeout = 100)
         {
             string tmp;
             //моя проверка на соединение.TimeOut == 100*50 mc - 5 sec
@@ -53,18 +52,10 @@ namespace MartsTelnet
                 tmp = client.ReadAsync().Result;
                 if (tmp != "")
                 {
-
                     if (addLog)
                         _log += tmp;
 
-                    if (_filter!=""&&separator)
-                        if (!tmp.Contains(_filter))
-                        {
-                            _log += "\"" + _filter + "\" не найден после авторизации. Операция прервана";
-                            return false;
-                        }
-
-                        return true;
+                    return true;
                 }
                 else
                     Thread.Sleep(50);
@@ -73,7 +64,7 @@ namespace MartsTelnet
             return false;
         }
 
-        public bool runCommands( bool showMessage = false)
+        public bool runCommands(bool showMessage = false)
         {
             _log =_ip+ "\n";
             try
@@ -82,17 +73,16 @@ namespace MartsTelnet
 
                 using (Client client = new Client(tcpByteStream, CancellationToken.None))
                 {
-                    if (!response(client, false,false, 200))
+                    if (!response(client, false, 200))
                     {
                         _log += "Error connect";
                         return false;
                     }
                     //авторизация
                     client.WriteLine(_user);
-                    if (!response(client))
-                        return false;
                     client.WriteLine(_password);
-                   if (!response(client,false,true))
+
+                   if (!response(client))
                         return false;
 
                     client.WriteLine("");
@@ -119,7 +109,9 @@ namespace MartsTelnet
             }
             catch (Exception ex)
             {
+
                _log+= ex.Message.ToString();
+
             }
             return false;
         }
