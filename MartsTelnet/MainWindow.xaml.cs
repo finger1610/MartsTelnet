@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace MartsTelnet
 {
@@ -21,6 +23,11 @@ namespace MartsTelnet
         List<string> _fails;
         bool isRun = true;//флаг для остановки процесса внутри btnConnect_Click
 
+        //для секундомера
+        DispatcherTimer dispatcherTimer = new DispatcherTimer();
+        Stopwatch stopWatch = new Stopwatch();
+        string curentTime = string.Empty;
+
         public MainWindow()
         {
             _devices = new List<string>();
@@ -28,8 +35,21 @@ namespace MartsTelnet
             _commands = new List<string>();
             _fails = new List<string>();
             InitializeComponent();
+            dispatcherTimer.Tick += new EventHandler(dt_Tick);
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 1);
         }
 
+        //для секундомера
+        void dt_Tick(object sender,EventArgs e)
+        {
+            if (stopWatch.IsRunning)
+            {
+                TimeSpan ts = stopWatch.Elapsed;
+                curentTime = string.Format("{0:00}:{1:00}:{2:00}",
+                    ts.Minutes, ts.Seconds, ts.Milliseconds/10);
+                lblClock.Content = curentTime;
+            }
+        }
 
         /// <summary>
         /// Проверяет заполненность полей для запуска скрипта
@@ -187,6 +207,9 @@ namespace MartsTelnet
             lblProgress.Content = prgBar.Value + "/" + prgBar.Maximum;
             lblStatus.Content = "";
             lblStatus.Foreground = Brushes.Black;
+            //clock
+            stopWatch.Reset();
+            lblClock.Content = "00:00:00";
 
             bool checkBox;
             //отключаем элементы управления
@@ -201,11 +224,15 @@ namespace MartsTelnet
             myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password,"",Convert.ToInt32(txtboxPort.Text));
             session.addComands(_commands);
 
+            stopWatch.Start();
+            dispatcherTimer.Start();
+
             foreach (string device in _devices)
             {
                 lblStatus.Content = device + " - Отправка...";
                 if (!isRun)
                 {
+                    stopWatch.Stop();
                     lblStatus.Content = device + " - Процесс остановлен";
                     MessageBox.Show(lblStatus.Content.ToString());
                     _log.Add((_log.Count + 1).ToString() + ")" + lblStatus.Content);
@@ -233,6 +260,12 @@ namespace MartsTelnet
                 prgBar.Value++;
             }
 
+            if (stopWatch.IsRunning)
+            {
+                stopWatch.Stop();
+            }
+          //  elapsedtimeitem.Items.Add(curentTime);
+            
 
             isEnableElements(true);
             btnStop.Visibility = Visibility.Hidden;
