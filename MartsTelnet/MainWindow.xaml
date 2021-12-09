@@ -74,6 +74,6 @@
         </CheckBox>
         <Label x:Name="lblClock"  HorizontalAlignment="Left" Margin="28,238,0,0" VerticalAlignment="Top" Content=""/>
 
-
+ 
     </Grid>
 </Window>
