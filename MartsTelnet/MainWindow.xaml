@@ -61,7 +61,7 @@
         </Button>
         <Button x:Name="btnShowLog" Content="Log" HorizontalAlignment="Left" Margin="141,186,0,0" VerticalAlignment="Top" Click="btnShow_Click" IsEnabled="False"/>
 
-        <ProgressBar x:Name="prgBar" HorizontalAlignment="Left" Height="12" Margin="28,232,0,0" VerticalAlignment="Top" Width="382" Visibility="Hidden"/>
+        <ProgressBar x:Name="prgBar" HorizontalAlignment="Left" Height="12" Margin="28,232,0,0" VerticalAlignment="Top" Width="382" Visibility="Visible"/>
         <Label x:Name="lblProgress" Content="0/0" HorizontalAlignment="Left" Margin="429,225,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
         <Button x:Name="btnFails" Content="Ошибки:   " HorizontalAlignment="Left" Margin="387,256,0,0" VerticalAlignment="Top" Foreground="#FFF50000" Width="70" Click="btnFails_Click" Visibility="Hidden"/>
         <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="213,256,0,0" VerticalAlignment="Top" Click="btnStop_Click" Height="32" Width="48" IsEnabled="False" Visibility="Hidden"/>
@@ -72,6 +72,7 @@
                 <ToolTip Content="Вывод результата после каждой отправки команд"/>
             </CheckBox.ToolTip>
         </CheckBox>
+        <Label x:Name="lblClock"  HorizontalAlignment="Left" Margin="28,238,0,0" VerticalAlignment="Top" Content=""/>
 
 
     </Grid>
