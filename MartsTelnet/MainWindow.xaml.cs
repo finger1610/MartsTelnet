@@ -220,16 +220,16 @@ namespace MartsTelnet
                 if (await Task.Run(() =>  session.runCommands(checkBox)))
                 {
                     lblStatus.Content = device + " - Отправлено";
-                    lblProgress.Content = _log.Count + "/" + prgBar.Maximum;
+                    lblProgress.Content = (_log.Count + 1 - _fails.Count).ToString() + "/" + prgBar.Maximum;
                 }
                 else
                 {
                     lblStatus.Content = device + " - Ошибка";
-                    _fails.Add(session.log);
+                    _fails.Add(session._log);
                     btnFails.Visibility = Visibility.Visible;
                     btnFails.Content = " Ошибки: " + _fails.Count().ToString();
                 }
-                _log.Add((_log.Count + 1).ToString() + ") " + session.log);
+                _log.Add((_log.Count + 1).ToString() + ") " + session._log);
                 prgBar.Value++;
             }
 
@@ -249,7 +249,7 @@ namespace MartsTelnet
         private void btnFails_Click(object sender, RoutedEventArgs e)
         {
             ShowList showList = new ShowList("Errors",_fails);
-            showList.ShowDialog();
+            showList.Show();
         }
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
