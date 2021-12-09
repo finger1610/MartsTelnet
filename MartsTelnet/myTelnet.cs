@@ -14,7 +14,7 @@ namespace MartsTelnet
         int _port;
         public string _ip;
         List<string> _commands;
-        public string log = "";
+        public string _log = "";
 
         public myTelnet(string user, string password, string ip, int port)
         {
@@ -34,54 +34,82 @@ namespace MartsTelnet
             }
         }
         //автоматическая отпрпавка без вывода
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="addLog">if true,then _log+=response </param>
+        /// <param name="timeout"> timeout*50mc== timeout mc </param>
+        /// <returns></returns>
+        private bool response(Client client, bool addLog = false,int timeout = 100)
+        {
+            string tmp;
+            //моя проверка на соединение.TimeOut == 100*50 mc - 5 sec
+            for (int i = 0; i < timeout; ++i)
+            {
+                tmp = client.ReadAsync().Result;
+                if (tmp != "")
+                {
+                    if (addLog)
+                        _log += tmp;
+
+                    return true;
+                }
+                else
+                    Thread.Sleep(50);
+            }
+            _log += "Time Out\n";
+            return false;
+        }
+
         public bool runCommands(bool showMessage = false)
         {
-            log =_ip+ "\nОшибка соединения";
+            _log =_ip+ "\n";
             try
             {
                 TcpByteStream tcpByteStream = new TcpByteStream(_ip, _port);
-                Thread.Sleep(1000);
-                if (tcpByteStream.Connected)
 
-                    using (Client client = new Client(tcpByteStream, System.Threading.CancellationToken.None))
+                using (Client client = new Client(tcpByteStream, CancellationToken.None))
+                {
+                    if (!response(client, false, 200))
                     {
-  
-                        client.WriteLine(_user);
-                        client.WriteLine(_password);
-                        Thread.Sleep(1000);
-                        log = _ip + "\n" + Task.Run(() => client.ReadAsync().Result).Result.ToString();
-
-                        client.WriteLine("");
-                        foreach (string command in _commands)
-                        {
-                            if (!tcpByteStream.Connected)
-                                return false;
-                            client.WriteLine(command);
-                            Thread.Sleep(50);
-                        }
-
-                        log = _ip + "\n" + Task.Run(()=> client.ReadAsync().Result).Result.ToString();
-
-                        if (log == _ip + "\n")
-                        {
-                            log += "Ошибка лога";
-                            return false;
-                        }
-                        if (showMessage)
-                            MessageBox.Show(log);
-
-                        client.Dispose();
-
-                        tcpByteStream.Close();
-                        tcpByteStream.Dispose();
-
-                        return true;
+                        _log += "Error connect";
+                        return false;
                     }
+                    //авторизация
+                    client.WriteLine(_user);
+                    client.WriteLine(_password);
+
+                   if (!response(client))
+                        return false;
+
+                    client.WriteLine("");
+                    client.ReadAsync();
+
+                   //Отправляем на устройство
+                    foreach (string command in _commands)
+                    { 
+                       client.WriteLine(command);
+                       if (!response(client,true))
+                           return false;
+
+                    }
+
+                   if (showMessage)
+                       MessageBox.Show(_log);
+
+                   client.Dispose();
+                   tcpByteStream.Close();
+                   tcpByteStream.Dispose();
+
+                    return true;
+                }
             }
             catch (Exception ex)
             {
 
-                MessageBox.Show(ex.Message.ToString());
+               _log+= ex.Message.ToString();
 
             }
             return false;
