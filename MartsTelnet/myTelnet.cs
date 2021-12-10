@@ -16,7 +16,7 @@ namespace MartsTelnet
         List<string> _commands;
         public string _log = "";
 
-        public myTelnet(string user, string password, string ip, int port,string filter)
+        public myTelnet(string user, string password, string ip, int port, string filter)
         {
             _user = user;
             _password = password;
@@ -25,7 +25,7 @@ namespace MartsTelnet
             _commands = new List<string>();
             _filter = filter;
         }
-        public myTelnet(string user, string password, string ip) : this(user, password, ip, 23,"") { }
+        public myTelnet(string user, string password, string ip) : this(user, password, ip, 23, "") { }
 
         public void addComands(List<string> commands)
         {
@@ -43,7 +43,7 @@ namespace MartsTelnet
         /// <param name="addLog">if true,then _log+=response </param>
         /// <param name="timeout"> timeout*50mc== timeout mc </param>
         /// <returns></returns>
-        private bool response(Client client, bool addLog = false,int timeout = 100)
+        private bool response(Client client, bool addLog = false, bool separator = false, int timeout = 100)
         {
             string tmp;
             //моя проверка на соединение.TimeOut == 100*50 mc - 5 sec
@@ -52,8 +52,16 @@ namespace MartsTelnet
                 tmp = client.ReadAsync().Result;
                 if (tmp != "")
                 {
+
                     if (addLog)
                         _log += tmp;
+
+                    if (_filter != "" && separator)
+                        if (!tmp.Contains(_filter))
+                        {
+                            _log += "\"" + _filter + "\" не найден после авторизации. Операция прервана";
+                            return false;
+                        }
 
                     return true;
                 }
@@ -66,58 +74,57 @@ namespace MartsTelnet
 
         public bool runCommands(bool showMessage = false)
         {
-            _log =_ip+ "\n";
+            _log = _ip + "\n";
             try
             {
                 TcpByteStream tcpByteStream = new TcpByteStream(_ip, _port);
 
                 using (Client client = new Client(tcpByteStream, CancellationToken.None))
                 {
-                    if (!response(client, false, 200))
+                    if (!response(client, false, false, 200))
                     {
                         _log += "Error connect";
                         return false;
                     }
                     //авторизация
                     client.WriteLine(_user);
+                    if (!response(client))
+                        return false;
                     client.WriteLine(_password);
-
-                   if (!response(client))
+                    if (!response(client, false, true))
                         return false;
 
                     client.WriteLine("");
                     client.ReadAsync();
 
-                   //Отправляем на устройство
+                    //Отправляем на устройство
                     foreach (string command in _commands)
-                    { 
-                       client.WriteLine(command);
-                       if (!response(client,true))
-                           return false;
+                    {
+                        client.WriteLine(command);
+                        if (!response(client, true))
+                            return false;
 
                     }
 
-                   if (showMessage)
-                       MessageBox.Show(_log);
+                    if (showMessage)
+                        MessageBox.Show(_log);
 
-                   client.Dispose();
-                   tcpByteStream.Close();
-                   tcpByteStream.Dispose();
+                    client.Dispose();
+                    tcpByteStream.Close();
+                    tcpByteStream.Dispose();
 
                     return true;
                 }
             }
             catch (Exception ex)
             {
-
-               _log+= ex.Message.ToString();
-
+                _log += ex.Message.ToString();
             }
             return false;
         }
 
-      
-   
+
+
     }
 
 }
