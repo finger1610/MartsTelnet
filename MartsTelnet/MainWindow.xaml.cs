@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using System.Net;
 
 namespace MartsTelnet
 {
@@ -153,7 +152,6 @@ namespace MartsTelnet
                     //Считывание из файла
                     _devices.Clear();
                     string tmp = string.Empty;
-
                     try
                     {
                         using (FileStream fs = new FileStream(txtboxIP.Text, FileMode.Open))
@@ -162,30 +160,17 @@ namespace MartsTelnet
                             {
                                 while (!sr.EndOfStream)
                                 {
-                                    tmpз = IPAddress.Parse(sr.ReadLine()).ToString();//вылетает, если не находит ip адрес
-                                    if (tmp!="")
-                                        _devices.Add(tmp);
+                                    //Добавить проверку на наличие IP адреса
+                                    _devices.Add(sr.ReadLine());
                                 }
                             }
                         }
                         checkComlete();
                     }
-                  
-                    catch(ArgumentException ex)
-                    {
-                        MessageBox.Show("Argument" + ex.Message.ToString());
-                    }
-
-                    //
-                    catch(FormatException ex)
-                    {
-                        MessageBox.Show("Format " + ex.Message.ToString());
-                    }
                     catch (Exception ex)
                     {
                         MessageBox.Show("Возникла ошибка при чтении:\n" + ex.Message.ToString());
                     }
-
 
                     lblFindIP.Visibility = Visibility.Visible;
                     lblFindIP.Content = $"Найдено " + _devices.Count + " строк";
