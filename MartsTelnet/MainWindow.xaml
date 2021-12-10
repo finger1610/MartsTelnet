@@ -8,9 +8,9 @@
         Title="TelnetRunner" Height="425" Width="506">
     <Grid>
         <Label Content="Login" HorizontalAlignment="Left" Margin="44,20,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.641,0.585" Grid.Column="1"/>
-        <Label Content="password" HorizontalAlignment="Left" Margin="23,46,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <Label Content="File to IP.txt" HorizontalAlignment="Left" Margin="16,69,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <Label Content="Port" HorizontalAlignment="Left" Margin="53,95,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+        <Label Content="password" HorizontalAlignment="Left" Margin="22,46,0,0" VerticalAlignment="Top"/>
+        <Label Content="File to IP.txt" HorizontalAlignment="Left" Margin="11,69,0,0" VerticalAlignment="Top"/>
+        <Label Content="Port" HorizontalAlignment="Left" Margin="51,92,0,0" VerticalAlignment="Top"/>
 
         <Label x:Name="lblFindIP" Content="Label" HorizontalAlignment="Left" Margin="242,46,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="#FF2DF500" Grid.Column="1"/>
         <Label x:Name="lblComAdd" Content="Команды добавлены" HorizontalAlignment="Left" Margin="241,107,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
@@ -42,7 +42,7 @@
                 <ToolTip Content="Проверка добавленных IP адресов из файла"/>
             </Button.ToolTip>
         </Button>
-        <TextBox x:Name="txtboxPort" HorizontalAlignment="Left" Margin="88,99,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="23" Grid.Column="1" TextChanged="txtboxPort_TextChanged">
+        <TextBox x:Name="txtboxPort" HorizontalAlignment="Left" Margin="88,96,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="23" TextChanged="txtboxPort_TextChanged">
             <TextBox.ToolTip>
                 <ToolTip Content="Default = 23"/>
             </TextBox.ToolTip>
@@ -73,6 +73,13 @@
             </CheckBox.ToolTip>
         </CheckBox>
         <Label x:Name="lblClock"  HorizontalAlignment="Left" Margin="28,238,0,0" VerticalAlignment="Top" Content=""/>
+        <Label Content="Фильтр" HorizontalAlignment="Left" Margin="33,115,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtboxFilter" HorizontalAlignment="Left" Margin="88,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120">
+            <TextBox.ToolTip>
+                <ToolTip Content="Поиск данного фрагмента после авторизации. Если нет, то разрыв соединения"/>
+            </TextBox.ToolTip>
+            
+        </TextBox>
 
 
     </Grid>

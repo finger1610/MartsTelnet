@@ -45,8 +45,8 @@ namespace MartsTelnet
             if (stopWatch.IsRunning)
             {
                 TimeSpan ts = stopWatch.Elapsed;
-                curentTime = string.Format("{0:00}:{1:00}:{2:00}",
-                    ts.Minutes, ts.Seconds, ts.Milliseconds/10);
+                curentTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}",
+                   ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds/10);
                 lblClock.Content = curentTime;
             }
         }
@@ -84,7 +84,7 @@ namespace MartsTelnet
         {
             txtoxLogin.IsEnabled = status;
             txtboxPassword.IsEnabled = status;
-
+            txtboxFilter.IsEnabled = status;    
             txtboxIP.IsEnabled = status;
             btnFileDialog.IsEnabled = status;
             btncheckList.IsEnabled = status;
@@ -95,6 +95,7 @@ namespace MartsTelnet
             btnTestConnect.IsEnabled = status;
             btnRun.IsEnabled = status;
             btnShowLog.IsEnabled = status;
+            
 
         }
     
@@ -204,6 +205,8 @@ namespace MartsTelnet
             prgBar.Value = 0;
             isRun = true;
             prgBar.Maximum = _devices.Count;
+            btnFails.Visibility = Visibility.Hidden;
+
             lblProgress.Content = prgBar.Value + "/" + prgBar.Maximum;
             lblStatus.Content = "";
             lblStatus.Foreground = Brushes.Black;
@@ -221,7 +224,7 @@ namespace MartsTelnet
             btnStop.Visibility = Visibility.Visible;
             btnStop.IsEnabled = true;
 
-            myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password,"",Convert.ToInt32(txtboxPort.Text));
+            myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password,"",Convert.ToInt32(txtboxPort.Text),txtboxFilter.Text);
             session.addComands(_commands);
 
             stopWatch.Start();
