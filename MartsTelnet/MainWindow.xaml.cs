@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Net;
 
 namespace MartsTelnet
 {
@@ -95,8 +96,8 @@ namespace MartsTelnet
             btnTestConnect.IsEnabled = status;
             btnRun.IsEnabled = status;
             btnShowLog.IsEnabled = status;
-            
 
+            btnReset.IsEnabled = status;
         }
     
 
@@ -139,17 +140,20 @@ namespace MartsTelnet
         }
         private void btnFileDialog_Click(object sender, RoutedEventArgs e)
         {
-            var fileDialog = new System.Windows.Forms.OpenFileDialog();
-            var result = fileDialog.ShowDialog();
+           
+                var fileDialog = new System.Windows.Forms.OpenFileDialog();
+                var result = fileDialog.ShowDialog();
+
             switch (result)
             {
                 case System.Windows.Forms.DialogResult.OK:
-                    var file = fileDialog.FileName;
-                    txtboxIP.Text = file;
-                    txtboxIP.ToolTip = file;
+                    txtboxIP.Text = fileDialog.FileName;
+                    txtboxIP.ToolTip = fileDialog.FileName;
 
                     //Считывание из файла
                     _devices.Clear();
+                    string tmp = string.Empty;
+
                     try
                     {
                         using (FileStream fs = new FileStream(txtboxIP.Text, FileMode.Open))
@@ -158,11 +162,24 @@ namespace MartsTelnet
                             {
                                 while (!sr.EndOfStream)
                                 {
-                                    _devices.Add(sr.ReadLine());
+                                    tmpз = IPAddress.Parse(sr.ReadLine()).ToString();//вылетает, если не находит ip адрес
+                                    if (tmp!="")
+                                        _devices.Add(tmp);
                                 }
                             }
                         }
                         checkComlete();
+                    }
+                  
+                    catch(ArgumentException ex)
+                    {
+                        MessageBox.Show("Argument" + ex.Message.ToString());
+                    }
+
+                    //
+                    catch(FormatException ex)
+                    {
+                        MessageBox.Show("Format " + ex.Message.ToString());
                     }
                     catch (Exception ex)
                     {
@@ -291,6 +308,30 @@ namespace MartsTelnet
         {
             isRun = false;
         }
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            txtoxLogin.Text = "";
+            txtboxPassword.Password = "";
+            txtboxIP.Text = "";
+            txtboxPort.Text = "23";
+            txtboxFilter.Text = "";
+            _commands.Clear();
+            _devices.Clear();
+            _fails.Clear();
+            _log.Clear();
 
+            btnStop.Visibility = Visibility.Hidden;
+            btnFails.Visibility = Visibility.Hidden;
+            btnShowLog.IsEnabled = false;
+
+            prgBar.Visibility = Visibility.Hidden;
+            lblComAdd.Visibility = Visibility.Hidden;
+            lblProgress.Content = "";
+            lblStatus.Content = "";
+            lblFindIP.Content = "";
+            
+            lblClock.Content = "";
+            checkComlete();
+        }
     }
 }
