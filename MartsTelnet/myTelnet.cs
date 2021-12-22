@@ -124,7 +124,7 @@ namespace MartsTelnet
                         }    
                          else
                         {
-                            _log =_ip+  "\"" + _waitResult + "\" не найден после ввода команд";
+                            _log =_ip+  "\" " + _waitResult + "\" не найден после ввода команд";
                             return false;
                         }
                     }
