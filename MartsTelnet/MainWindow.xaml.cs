@@ -158,7 +158,10 @@ namespace MartsTelnet
 
                     //Считывание из файла
                     _devices.Clear();
-                  //  string tmp = string.Empty;
+                    string tmp = string.Empty;
+
+                    //резулярное выражение для поиска ip в строке
+                    System.Text.RegularExpressions.Regex ip = new System.Text.RegularExpressions.Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\b");
 
                     try
                     {
@@ -166,12 +169,12 @@ namespace MartsTelnet
                         {
                             using (StreamReader sr = new StreamReader(fs, System.Text.Encoding.UTF8))
                             {
+                               
                                 while (!sr.EndOfStream)
                                 {
-                                    //   tmp = IPAddress.Parse(sr.ReadLine()).ToString();//вылетает, если не находит ip адрес
-                                    //if (tmp!="")
-                                    //    _devices.Add(tmp);
-                                    _devices.Add(sr.ReadLine());
+                                    tmp = sr.ReadLine();
+                                     if (ip.IsMatch(tmp))
+                                        _devices.Add( ip.Match(tmp).ToString());
                                 }
                             }
                         }
@@ -184,10 +187,7 @@ namespace MartsTelnet
                     }
 
                     //
-                    catch(FormatException ex)
-                    {
-                        MessageBox.Show("Format " + ex.Message.ToString());
-                    }
+                  
                     catch (Exception ex)
                     {
                         MessageBox.Show("Возникла ошибка при чтении:\n" + ex.Message.ToString());
@@ -195,7 +195,7 @@ namespace MartsTelnet
 
 
                     lblFindIP.Visibility = Visibility.Visible;
-                    lblFindIP.Content = $"Найдено " + _devices.Count + " строк";
+                    lblFindIP.Content = $"Найдено " + _devices.Count + " адресов";
                     btncheckList.IsEnabled = true;
                     break;
                 case System.Windows.Forms.DialogResult.Cancel:
