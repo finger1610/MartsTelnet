@@ -14,7 +14,9 @@ namespace MartsTelnet
         int _port;
         public string _ip;
         List<string> _commands;
-        public string _log = "";
+        string _filter = string.Empty;
+        public string _log = string.Empty;
+        public string _waitResult = string.Empty;
 
         public myTelnet(string user, string password, string ip, int port, string filter)
         {
@@ -37,7 +39,7 @@ namespace MartsTelnet
         //автоматическая отпрпавка без вывода
 
         /// <summary>
-        /// 
+        /// Проверяет наличие ответа на устройство
         /// </summary>
         /// <param name="client"></param>
         /// <param name="addLog">if true,then _log+=response </param>
@@ -103,7 +105,28 @@ namespace MartsTelnet
                         client.WriteLine(command);
                         if (!response(client, true))
                             return false;
+                    }
 
+                    //ожидание результата на выходе
+                    if (_waitResult != "")
+                    {
+                        if (_log.Contains(_waitResult))
+                        {
+                            string[] tmp = _log.Split("\n");
+                            foreach(string row in tmp)
+                            {
+                                if (row.Contains(_waitResult))
+                                {
+                                    _log = _ip + " - " + row;
+                                    break;
+                                }
+                            }
+                        }    
+                         else
+                        {
+                            _log =_ip+  "\"" + _waitResult + "\" не найден после ввода команд";
+                            return false;
+                        }
                     }
 
                     if (showMessage)
