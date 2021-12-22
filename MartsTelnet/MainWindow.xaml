@@ -14,7 +14,7 @@
         <Label Content="Ожидаение вывода" HorizontalAlignment="Left" Margin="-1,141,0,0" VerticalAlignment="Top"/>
 
         <Label x:Name="lblFindIP" Content="Label" HorizontalAlignment="Left" Margin="242,46,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="#FF2DF500" Grid.Column="1"/>
-        <Label x:Name="lblComAdd" Content="Команды добавлены" HorizontalAlignment="Left" Margin="252,101,0,0" VerticalAlignment="Top" Visibility="Visible"/>
+        <Label x:Name="lblComAdd" Content="Команды добавлены" HorizontalAlignment="Left" Margin="271,100,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
 
 
 
@@ -53,7 +53,7 @@
                 <ToolTip Content="ожидание данного фрагмента от оборудования. Может быть пустым"/>
             </TextBox.ToolTip>
         </TextBox>
-        <Button x:Name="btnAddComands" Content="Команды" HorizontalAlignment="Left" Margin="355,123,0,0" VerticalAlignment="Top" Click="btnAddComands_Click">
+        <Button x:Name="btnAddComands" Content="Команды" HorizontalAlignment="Left" Margin="297,126,0,0" VerticalAlignment="Top" Click="btnAddComands_Click">
             <Button.ToolTip>
                 <ToolTip Content="Список команд на отправку на оборудование"/>
             </Button.ToolTip>
