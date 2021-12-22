@@ -35,6 +35,8 @@ namespace MartsTelnet
             _log = new List<string>();
             _commands = new List<string>();
             _fails = new List<string>();
+  
+
             InitializeComponent();
             dispatcherTimer.Tick += new EventHandler(dt_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 1);
@@ -85,8 +87,12 @@ namespace MartsTelnet
         {
             txtoxLogin.IsEnabled = status;
             txtboxPassword.IsEnabled = status;
-            txtboxFilter.IsEnabled = status;    
             txtboxIP.IsEnabled = status;
+            if(chkBoxFilter.IsChecked.Value)
+                txtboxFilter.IsEnabled = status;
+            if (chkBoxWait.IsChecked.Value)
+                txtboxWait.IsEnabled = status;
+
             btnFileDialog.IsEnabled = status;
             btncheckList.IsEnabled = status;
 
@@ -152,7 +158,7 @@ namespace MartsTelnet
 
                     //Считывание из файла
                     _devices.Clear();
-                    string tmp = string.Empty;
+                  //  string tmp = string.Empty;
 
                     try
                     {
@@ -162,9 +168,10 @@ namespace MartsTelnet
                             {
                                 while (!sr.EndOfStream)
                                 {
-                                    tmpз = IPAddress.Parse(sr.ReadLine()).ToString();//вылетает, если не находит ip адрес
-                                    if (tmp!="")
-                                        _devices.Add(tmp);
+                                    //   tmp = IPAddress.Parse(sr.ReadLine()).ToString();//вылетает, если не находит ip адрес
+                                    //if (tmp!="")
+                                    //    _devices.Add(tmp);
+                                    _devices.Add(sr.ReadLine());
                                 }
                             }
                         }
@@ -214,11 +221,15 @@ namespace MartsTelnet
             session.runCommands(true);
             isEnableElements(true);
         }
+        
+        //Основная кнопка. Тут всё запускается
         private async void btnRun_Click(object sender, RoutedEventArgs e)
         {
             //Обнуляем значения
             _log.Clear();
             _fails.Clear();
+
+
             prgBar.Value = 0;
             isRun = true;
             prgBar.Maximum = _devices.Count;
@@ -241,8 +252,14 @@ namespace MartsTelnet
             btnStop.Visibility = Visibility.Visible;
             btnStop.IsEnabled = true;
 
-            myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password,"",Convert.ToInt32(txtboxPort.Text),txtboxFilter.Text);
+            myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password,"",Convert.ToInt32(txtboxPort.Text),
+                chkBoxFilter.IsChecked.Value? txtboxFilter.Text: string.Empty );
             session.addComands(_commands);
+
+            if(chkBoxWait.IsChecked.Value)
+            {
+                session._waitResult = txtboxWait.Text;
+            }
 
             stopWatch.Start();
             dispatcherTimer.Start();
@@ -332,6 +349,24 @@ namespace MartsTelnet
             
             lblClock.Content = "";
             checkComlete();
+        }
+
+
+        private void chkBoxFilter_Checked(object sender, RoutedEventArgs e)
+        {
+            txtboxFilter.IsEnabled = chkBoxFilter.IsChecked.Value;
+        }
+        private void chkBoxFilter_Unchecked(object sender, RoutedEventArgs e)
+        {
+            txtboxFilter.IsEnabled = chkBoxFilter.IsChecked.Value;
+        }
+        private void chkBoxWait_Checked(object sender, RoutedEventArgs e)
+        {
+            txtboxWait.IsEnabled = chkBoxWait.IsChecked.Value;
+        }
+        private void chkBoxWait_Unchecked(object sender, RoutedEventArgs e)
+        {
+            txtboxWait.IsEnabled = chkBoxWait.IsChecked.Value;
         }
     }
 }
