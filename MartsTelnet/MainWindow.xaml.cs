@@ -93,6 +93,9 @@ namespace MartsTelnet
             if (chkBoxWait.IsChecked.Value)
                 txtboxWait.IsEnabled = status;
 
+            chkBoxFilter.IsEnabled = status;
+            chkBoxWait.IsEnabled = status;
+
             btnFileDialog.IsEnabled = status;
             btncheckList.IsEnabled = status;
 
@@ -161,7 +164,7 @@ namespace MartsTelnet
                     string tmp = string.Empty;
 
                     //резулярное выражение для поиска ip в строке
-                    System.Text.RegularExpressions.Regex ip = new System.Text.RegularExpressions.Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\b");
+                    System.Text.RegularExpressions.Regex ip = new System.Text.RegularExpressions.Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
 
                     try
                     {
@@ -242,6 +245,17 @@ namespace MartsTelnet
             stopWatch.Reset();
             lblClock.Content = "00:00:00";
 
+            //первая запись в логе с системной инфой
+            string commands = string.Empty;
+            foreach(string str in _commands)
+                commands += str+"\n";
+
+          
+            _log.Add("Колличество устройств: " + _devices.Count +
+              "\n"+"Команды на отправку: " + commands +
+              (chkBoxFilter.IsChecked.Value ? "\nФильтр: " + txtboxFilter.Text : string.Empty) +
+              (chkBoxWait.IsChecked.Value ? "\nОжидание вывода: " + txtboxWait.Text : string.Empty) + "\n");
+
             bool checkBox;
             //отключаем элементы управления
             isEnableElements(false);
@@ -263,7 +277,6 @@ namespace MartsTelnet
 
             stopWatch.Start();
             dispatcherTimer.Start();
-
             foreach (string device in _devices)
             {
                 lblStatus.Content = device + " - Отправка...";
@@ -301,8 +314,10 @@ namespace MartsTelnet
             {
                 stopWatch.Stop();
             }
-          //  elapsedtimeitem.Items.Add(curentTime);
-            
+            //  elapsedtimeitem.Items.Add(curentTime);
+
+            _log[0] += "Выполнено успешно: " + (_log.Count-1 - _fails.Count) + "\nВремя выполнения: " + lblClock.Content+ "\n"+
+                (!isRun? "Прерывание вручную":"Остановка по окончанию адресов");
 
             isEnableElements(true);
             btnStop.Visibility = Visibility.Hidden;
