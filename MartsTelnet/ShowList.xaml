@@ -8,7 +8,7 @@
         Height="450" Width="800">
     <Grid>
         <ListBox x:Name="lstboxIP" Margin="86,43,86,77" MouseDoubleClick="lstboxIP_MouseDoubleClick"/>
-        <Button x:Name="btn" Content="OK" HorizontalAlignment="Left" Margin="300,383,0,0" VerticalAlignment="Top" Click="btn_Click" RenderTransformOrigin="0.85,-1.752" Height="41" Width="61"/>
-        <Button x:Name="btnSaveToFile" Content="Сохранить в файл" HorizontalAlignment="Left" Margin="433,383,0,0" VerticalAlignment="Top" Click="btnSaveToFile_Click" Height="41" Width="114"/>
+        <Button x:Name="btn" Content="OK" HorizontalAlignment="Left" Margin="300,383,0,0" VerticalAlignment="Bottom" Click="btn_Click" RenderTransformOrigin="0.85,-1.752" Height="41" Width="61"/>
+        <Button x:Name="btnSaveToFile" Content="Сохранить в файл" HorizontalAlignment="Left" Margin="433,383,0,0" VerticalAlignment="Bottom" Click="btnSaveToFile_Click" Height="41" Width="114"/>
     </Grid>
 </Window>

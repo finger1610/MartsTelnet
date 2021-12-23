@@ -14,7 +14,7 @@
         <Label Content="Фильтр" HorizontalAlignment="Left" Margin="62,115,0,0" VerticalAlignment="Top"/>
         <Label Content="Ожидаение вывода" HorizontalAlignment="Left" Margin="-1,141,0,0" VerticalAlignment="Top"/>
 
-        <Label x:Name="lblFindIP" Content="Label" HorizontalAlignment="Left" Margin="242,46,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="#FF2DF500" Grid.Column="1"/>
+        <Label x:Name="lblFindIP" Content="Label" HorizontalAlignment="Left" Margin="266,46,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="#FF2DF500"/>
         <Label x:Name="lblComAdd" Content="Команды добавлены" HorizontalAlignment="Left" Margin="271,100,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
 
 
@@ -49,16 +49,12 @@
                 <ToolTip Content="Default = 23"/>
             </TextBox.ToolTip>
         </TextBox>
-
-        <CheckBox x:Name="chkBoxFilter" Content="" HorizontalAlignment="Left" Margin="237,123,0,0" VerticalAlignment="Top" Unchecked="chkBoxFilter_Unchecked" Checked="chkBoxFilter_Checked"/>
-        <TextBox x:Name="txtboxFilter" HorizontalAlignment="Left" Margin="117,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False">
+        <TextBox x:Name="txtboxFilter" HorizontalAlignment="Left" Margin="117,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120">
             <TextBox.ToolTip>
                 <ToolTip Content="Поиск данного фрагмента после авторизации. Если нет, то разрыв соединения"/>
             </TextBox.ToolTip>
         </TextBox>
-
-        <CheckBox x:Name="chkBoxWait" Content="" HorizontalAlignment="Left" Margin="237,143,0,0" VerticalAlignment="Top" Checked="chkBoxWait_Checked" Unchecked="chkBoxWait_Unchecked"/>
-        <TextBox x:Name="txtboxWait" HorizontalAlignment="Left" Margin="117,145,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False">
+        <TextBox x:Name="txtboxWait" HorizontalAlignment="Left" Margin="117,145,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120">
             <TextBox.ToolTip>
                 <ToolTip Content="Ожидание введенного фрагмента текста от оборудования. Может быть пустым"/>
             </TextBox.ToolTip>
@@ -84,13 +80,13 @@
         </CheckBox>
 
 
-        <ProgressBar x:Name="prgBar" HorizontalAlignment="Left" Height="12" Margin="28,247,0,0" VerticalAlignment="Top" Width="382" Visibility="Visible"/>
+        <ProgressBar x:Name="prgBar" HorizontalAlignment="Left" Height="12" Margin="28,247,0,0" VerticalAlignment="Top" Width="382" Visibility="Hidden"/>
         <Label x:Name="lblProgress" Content="0/0" HorizontalAlignment="Left" Margin="429,240,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
         <Button x:Name="btnFails" Content="Ошибки:   " HorizontalAlignment="Left" Margin="387,271,0,0" VerticalAlignment="Top" Foreground="#FFF50000"  Click="btnFails_Click" Visibility="Hidden"/>
         <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="213,271,0,0" VerticalAlignment="Top" Click="btnStop_Click" Height="32" Width="48" IsEnabled="False" Visibility="Hidden"/>
 
-        <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Margin="28,241,0,0" VerticalAlignment="Top" Foreground="Black" Visibility="Visible" RenderTransformOrigin="0.262,0.926"/>
-        <Label x:Name="lblClock"  HorizontalAlignment="Left" Margin="28,267,0,0" VerticalAlignment="Top" Content=""/>
+        <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Margin="28,228,0,0" VerticalAlignment="Top" Foreground="Black" Visibility="Visible" RenderTransformOrigin="0.262,0.926"/>
+        <Label x:Name="lblClock"  HorizontalAlignment="Left" Margin="28,254,0,0" VerticalAlignment="Top" Content=""/>
 
         <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="429,36,0,0" VerticalAlignment="Top" Click="btnReset_Click"/>
 

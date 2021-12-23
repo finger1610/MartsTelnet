@@ -88,14 +88,11 @@ namespace MartsTelnet
             txtoxLogin.IsEnabled = status;
             txtboxPassword.IsEnabled = status;
             txtboxIP.IsEnabled = status;
-            if(chkBoxFilter.IsChecked.Value)
-                txtboxFilter.IsEnabled = status;
-            if (chkBoxWait.IsChecked.Value)
-                txtboxWait.IsEnabled = status;
+  
+            txtboxFilter.IsEnabled = status;
+            txtboxWait.IsEnabled = status;
 
-            chkBoxFilter.IsEnabled = status;
-            chkBoxWait.IsEnabled = status;
-
+          
             btnFileDialog.IsEnabled = status;
             btncheckList.IsEnabled = status;
 
@@ -105,6 +102,8 @@ namespace MartsTelnet
             btnTestConnect.IsEnabled = status;
             btnRun.IsEnabled = status;
             btnShowLog.IsEnabled = status;
+
+            btnFails.IsEnabled = status;
 
             btnReset.IsEnabled = status;
         }
@@ -203,7 +202,7 @@ namespace MartsTelnet
                     break;
                 case System.Windows.Forms.DialogResult.Cancel:
                 default:
-                    txtboxIP.Text = "";
+                    txtboxIP.Text = string.Empty;
                     txtboxIP.ToolTip = null;
 
                     lblFindIP.Visibility = Visibility.Hidden;
@@ -239,7 +238,7 @@ namespace MartsTelnet
             btnFails.Visibility = Visibility.Hidden;
 
             lblProgress.Content = prgBar.Value + "/" + prgBar.Maximum;
-            lblStatus.Content = "";
+            lblStatus.Content = string.Empty;
             lblStatus.Foreground = Brushes.Black;
             //clock
             stopWatch.Reset();
@@ -252,9 +251,10 @@ namespace MartsTelnet
 
           
             _log.Add("Колличество устройств: " + _devices.Count +
-              "\n"+"Команды на отправку: " + commands +
-              (chkBoxFilter.IsChecked.Value ? "\nФильтр: " + txtboxFilter.Text : string.Empty) +
-              (chkBoxWait.IsChecked.Value ? "\nОжидание вывода: " + txtboxWait.Text : string.Empty) + "\n");
+              "\nКоманды на отправку: " + commands +
+             "\nПорт: "+ txtboxPort.Text +
+              (txtboxFilter.Text != "" ? "\nФильтр: " + txtboxFilter.Text : string.Empty) +
+              (txtboxWait.Text!="" ? "\nОжидание вывода: " + txtboxWait.Text : string.Empty) + "\n");
 
             bool checkBox;
             //отключаем элементы управления
@@ -267,14 +267,11 @@ namespace MartsTelnet
             btnStop.IsEnabled = true;
 
             myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password,"",Convert.ToInt32(txtboxPort.Text),
-                chkBoxFilter.IsChecked.Value? txtboxFilter.Text: string.Empty );
+                txtboxFilter.Text!=""? txtboxFilter.Text: string.Empty );
             session.addComands(_commands);
 
-            if(chkBoxWait.IsChecked.Value)
-            {
-                session._waitResult = txtboxWait.Text;
-            }
-
+            session._waitResult = txtboxWait.Text;
+           
             stopWatch.Start();
             dispatcherTimer.Start();
             foreach (string device in _devices)
@@ -342,11 +339,12 @@ namespace MartsTelnet
         }
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            txtoxLogin.Text = "";
-            txtboxPassword.Password = "";
-            txtboxIP.Text = "";
+            txtoxLogin.Text = string.Empty;
+            txtboxPassword.Password = string.Empty;
+            txtboxIP.Text = string.Empty;
             txtboxPort.Text = "23";
-            txtboxFilter.Text = "";
+            txtboxFilter.Text = string.Empty;
+            txtboxWait.Text = string.Empty;
             _commands.Clear();
             _devices.Clear();
             _fails.Clear();
@@ -358,30 +356,13 @@ namespace MartsTelnet
 
             prgBar.Visibility = Visibility.Hidden;
             lblComAdd.Visibility = Visibility.Hidden;
-            lblProgress.Content = "";
-            lblStatus.Content = "";
-            lblFindIP.Content = "";
+            lblProgress.Content = string.Empty;
+            lblStatus.Content = string.Empty;
+            lblFindIP.Content = string.Empty;
             
-            lblClock.Content = "";
+            lblClock.Content = string.Empty;
             checkComlete();
         }
 
-
-        private void chkBoxFilter_Checked(object sender, RoutedEventArgs e)
-        {
-            txtboxFilter.IsEnabled = chkBoxFilter.IsChecked.Value;
-        }
-        private void chkBoxFilter_Unchecked(object sender, RoutedEventArgs e)
-        {
-            txtboxFilter.IsEnabled = chkBoxFilter.IsChecked.Value;
-        }
-        private void chkBoxWait_Checked(object sender, RoutedEventArgs e)
-        {
-            txtboxWait.IsEnabled = chkBoxWait.IsChecked.Value;
-        }
-        private void chkBoxWait_Unchecked(object sender, RoutedEventArgs e)
-        {
-            txtboxWait.IsEnabled = chkBoxWait.IsChecked.Value;
-        }
     }
 }
