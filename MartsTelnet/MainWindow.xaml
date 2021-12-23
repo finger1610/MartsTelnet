@@ -88,7 +88,12 @@
         <Label x:Name="lblStatus" Content="" HorizontalAlignment="Left" Margin="28,228,0,0" VerticalAlignment="Top" Foreground="Black" Visibility="Visible" RenderTransformOrigin="0.262,0.926"/>
         <Label x:Name="lblClock"  HorizontalAlignment="Left" Margin="28,254,0,0" VerticalAlignment="Top" Content=""/>
 
-        <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="429,36,0,0" VerticalAlignment="Top" Click="btnReset_Click"/>
+        <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="429,36,0,0" VerticalAlignment="Top" Click="btnReset_Click">
+            <Button.ToolTip>
+                <ToolTip Content="Сбросить все значения в программе"/>
+            </Button.ToolTip>
+            
+        </Button>
 
 
 
