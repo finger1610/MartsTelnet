@@ -113,13 +113,11 @@ namespace MartsTelnet
                         if (_log.Contains(_waitResult))
                         {
                             string[] tmp = _log.Split("\n");
+                            _log = _ip + " - ";
                             foreach(string row in tmp)
                             {
                                 if (row.Contains(_waitResult))
-                                {
-                                    _log = _ip + " - " + row;
-                                    break;
-                                }
+                                    _log += row+"\n";
                             }
                         }    
                          else
