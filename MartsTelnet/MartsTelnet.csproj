@@ -13,4 +13,13 @@
     <PackageReference Include="Telnet" Version="0.8.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="_ReadMe.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="_Инструкция к программе MartsTelnet.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
