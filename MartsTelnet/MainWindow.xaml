@@ -72,10 +72,23 @@
                 <ToolTip Content="Тестовое подключение к первому оборудованию в списке"/>
             </Button.ToolTip>
         </Button>
-        <Button x:Name="btnShowLog" Content="Log" HorizontalAlignment="Left" Margin="141,205,0,0" VerticalAlignment="Top" Click="btnShow_Click" IsEnabled="False"/>
+        <Button x:Name="btnShowLog" Content="General Log" HorizontalAlignment="Left" Margin="45,205,0,0" VerticalAlignment="Top" Click="btnShow_Click" IsEnabled="False"/>
+
+        <Button x:Name="btnShowLogSuccess" Content="Success Log" HorizontalAlignment="Left" Margin="140,205,0,0" VerticalAlignment="Top" Click="btnShowLogSuccess_Click" IsEnabled="False">
+            <Button.ToolTip>
+                <ToolTip Content="Лог успешных проходов по оборудованию"/>
+            </Button.ToolTip>
+
+        </Button>
         <CheckBox x:Name="chkBoxShowRes" Content="Show Message" HorizontalAlignment="Left" Margin="173,178,0,0" VerticalAlignment="Top" IsEnabled="False">
             <CheckBox.ToolTip>
                 <ToolTip Content="Вывод результата после каждой отправки команд"/>
+            </CheckBox.ToolTip>
+        </CheckBox>
+        
+        <CheckBox x:Name="chkBoxSaveLogs" Content="Сохранить весь лог" HorizontalAlignment="Left" Margin="220,205,0,0" VerticalAlignment="Top">
+            <CheckBox.ToolTip>
+                <ToolTip Content="Сохранение лога рядом с исходным файлом с адресами"/>
             </CheckBox.ToolTip>
         </CheckBox>
 
