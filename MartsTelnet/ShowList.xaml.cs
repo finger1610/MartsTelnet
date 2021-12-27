@@ -65,7 +65,7 @@ namespace MartsTelnet
                                {
                                     sw.WriteLine(iter);
                                     sw.WriteLine("##############################");
-                                }
+                               }
                             }
                         }
                         MessageBox.Show("Содержимое сохранено в файле " + fileName);                 

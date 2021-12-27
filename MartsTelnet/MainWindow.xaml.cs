@@ -21,6 +21,7 @@ namespace MartsTelnet
         List<string> _devices;
         List<string> _commands;
         List<string> _log;
+        List<string> _logSuccess;
         List<string> _fails;
         bool isRun = true;//флаг для остановки процесса внутри btnConnect_Click
 
@@ -35,7 +36,8 @@ namespace MartsTelnet
             _log = new List<string>();
             _commands = new List<string>();
             _fails = new List<string>();
-  
+
+            _logSuccess = new List<string>();
 
             InitializeComponent();
             dispatcherTimer.Tick += new EventHandler(dt_Tick);
@@ -43,13 +45,13 @@ namespace MartsTelnet
         }
 
         //для секундомера
-        void dt_Tick(object sender,EventArgs e)
+        void dt_Tick(object sender, EventArgs e)
         {
             if (stopWatch.IsRunning)
             {
                 TimeSpan ts = stopWatch.Elapsed;
-                curentTime = string.Format("{0:00}:{1:00}:{2:00}",
-                    ts.Minutes, ts.Seconds, ts.Milliseconds/10);
+                curentTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}",
+                   ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
                 lblClock.Content = curentTime;
             }
         }
@@ -83,16 +85,16 @@ namespace MartsTelnet
         /// переключает доступность элементов
         /// </summary>
         /// <param name="status"> elements.IsEnabled = true </param>
-        private void isEnableElements(bool status) 
+        private void isEnableElements(bool status)
         {
             txtoxLogin.IsEnabled = status;
             txtboxPassword.IsEnabled = status;
             txtboxIP.IsEnabled = status;
-  
+
             txtboxFilter.IsEnabled = status;
             txtboxWait.IsEnabled = status;
 
-          
+
             btnFileDialog.IsEnabled = status;
             btncheckList.IsEnabled = status;
 
@@ -102,18 +104,17 @@ namespace MartsTelnet
             btnTestConnect.IsEnabled = status;
             btnRun.IsEnabled = status;
             btnShowLog.IsEnabled = status;
-
+            btnShowLogSuccess.IsEnabled = status;
             btnFails.IsEnabled = status;
 
             btnReset.IsEnabled = status;
         }
-    
+
 
         //Изменения тектБоксов
         private void txtoxLogin_TextChanged(object sender, TextChangedEventArgs e)
         {
             checkComlete();
-
         }
         private void txtboxPassword_PasswordChanged(object sender, RoutedEventArgs e)
         {
@@ -143,16 +144,27 @@ namespace MartsTelnet
         }
         private void btnShow_Click(object sender, RoutedEventArgs e)
         {
-            ShowList showList = new ShowList("Log", _log);
+            ShowList showList = new ShowList(btnShowLog.Content.ToString(), _log);
             showList.ShowDialog();
         }
+
+        private void btnShowLogSuccess_Click(object sender, RoutedEventArgs e)
+        {
+            ShowList showList = new ShowList(btnShowLogSuccess.Content.ToString(), _logSuccess);
+            showList.ShowDialog();
+        }
+        private void btnFails_Click(object sender, RoutedEventArgs e)
+        {
+            ShowList showList = new ShowList("Errors", _fails);
+            showList.Show();
+        }
+
         private void btnFileDialog_Click(object sender, RoutedEventArgs e)
         {
-           
-                var fileDialog = new System.Windows.Forms.OpenFileDialog();
-                var result = fileDialog.ShowDialog();
 
-            switch (result)
+            System.Windows.Forms.OpenFileDialog fileDialog = new System.Windows.Forms.OpenFileDialog();
+
+            switch (fileDialog.ShowDialog())
             {
                 case System.Windows.Forms.DialogResult.OK:
                     txtboxIP.Text = fileDialog.FileName;
@@ -187,9 +199,7 @@ namespace MartsTelnet
                     {
                         MessageBox.Show("Argument" + ex.Message.ToString());
                     }
-
                     //
-                  
                     catch (Exception ex)
                     {
                         MessageBox.Show("Возникла ошибка при чтении:\n" + ex.Message.ToString());
@@ -229,6 +239,7 @@ namespace MartsTelnet
         {
             //Обнуляем значения
             _log.Clear();
+            _logSuccess.Clear();
             _fails.Clear();
 
 
@@ -255,6 +266,7 @@ namespace MartsTelnet
              "\nПорт: "+ txtboxPort.Text +
               (txtboxFilter.Text != "" ? "\nФильтр: " + txtboxFilter.Text : string.Empty) +
               (txtboxWait.Text!="" ? "\nОжидание вывода: " + txtboxWait.Text : string.Empty) + "\n");
+            _logSuccess.Add("Лог успешных проходов\n");
 
             bool checkBox;
             //отключаем элементы управления
@@ -282,7 +294,7 @@ namespace MartsTelnet
                     stopWatch.Stop();
                     lblStatus.Content = device + " - Процесс остановлен";
                     MessageBox.Show(lblStatus.Content.ToString());
-                    _log.Add((_log.Count + 1).ToString() + ")" + lblStatus.Content);
+                    _log.Add((_log.Count + 1) + ")" + lblStatus.Content);
 
                     break;
                 }
@@ -295,15 +307,16 @@ namespace MartsTelnet
                 {
                     lblStatus.Content = device + " - Отправлено";
                     lblProgress.Content = (_log.Count + 1 - _fails.Count).ToString() + "/" + prgBar.Maximum;
+                    _logSuccess.Add((_logSuccess.Count + 1) + ")" + session._log);
                 }
                 else
                 {
                     lblStatus.Content = device + " - Ошибка";
                     _fails.Add(session._log);
                     btnFails.Visibility = Visibility.Visible;
-                    btnFails.Content = " Ошибки: " + _fails.Count().ToString();
+                    btnFails.Content = " Ошибки: " + _fails.Count();
                 }
-                _log.Add((_log.Count + 1).ToString() + ") " + session._log);
+                _log.Add(_log.Count + ") " + session._log);
                 prgBar.Value++;
             }
 
@@ -315,7 +328,7 @@ namespace MartsTelnet
 
             _log[0] += "Выполнено успешно: " + (_log.Count-1 - _fails.Count) + "\nВремя выполнения: " + lblClock.Content+ "\n"+
                 (!isRun? "Прерывание вручную":"Остановка по окончанию адресов");
-
+            _logSuccess[0] += "Колличество устройств: " + (_logSuccess.Count - 1);
             isEnableElements(true);
             btnStop.Visibility = Visibility.Hidden;
             btnStop.IsEnabled = false;
@@ -327,11 +340,84 @@ namespace MartsTelnet
             if (_fails.Count != 0)
                 btnFails.IsEnabled = true;
 
+            if (chkBoxSaveLogs.IsChecked.Value)
+            {
+                saveLog();
+            }
+
         }
-        private void btnFails_Click(object sender, RoutedEventArgs e)
+
+        void saveLog()
         {
-            ShowList showList = new ShowList("Errors",_fails);
-            showList.Show();
+            string[] tmp = txtboxIP.Text.Split("\\");
+            string directory = tmp[tmp.Length-1] + "_log ";
+
+           
+            var fileDialog = new System.Windows.Forms.FolderBrowserDialog();
+            fileDialog.Description = "Выбор папки для лога";
+                switch (fileDialog.ShowDialog())
+                {
+                    case System.Windows.Forms.DialogResult.OK:
+                    directory = fileDialog.SelectedPath +"\\"+ directory+txtboxFilter.Text+" "+txtboxWait.Text;
+
+
+                try
+                {
+                        if (!Directory.Exists(directory))
+                            Directory.CreateDirectory(directory);
+
+                        using (FileStream fs = new FileStream(directory + "\\" + btnShowLog.Content.ToString() + ".txt", FileMode.Create))
+                        {
+                  
+                            using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
+                            {
+                                foreach (string iter in _log)
+                                {
+                                    sw.WriteLine(iter);
+                                    sw.WriteLine("##############################");
+                                }
+                            }
+                        }
+
+                        using (FileStream fs = new FileStream(directory + "\\" + btnShowLogSuccess.Content.ToString() + ".txt", FileMode.Create))
+                        {
+
+                            using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
+                            {
+                                foreach (string iter in _logSuccess)
+                                {
+                                    sw.WriteLine(iter);
+                                    sw.WriteLine("##############################");
+                                }
+                            }
+                        }
+                        using (FileStream fs = new FileStream(directory + "\\" + "Errors Log.txt", FileMode.Create))
+                        {
+
+                            using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
+                            {
+                                foreach (string iter in _fails)
+                                {
+                                    sw.WriteLine(iter);
+                                    sw.WriteLine("##############################");
+                                }
+                            }
+                        }
+                MessageBox.Show("Лог сохранен в папке: " + directory);
+
+                    }
+
+                    catch (ArgumentException ex)
+                    {
+                        MessageBox.Show("Argument" + ex.Message.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Возникла ошибка при записи:\n" + ex.Message.ToString());
+                    }
+                    break;
+            }
+
         }
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
