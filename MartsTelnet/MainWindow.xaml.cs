@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using System.Net;
 
 namespace MartsTelnet
 {
@@ -20,9 +18,9 @@ namespace MartsTelnet
     {
         List<string> _devices;
         List<string> _commands;
-        List<string> _log;
-        List<string> _logSuccess;
-        List<string> _fails;
+        List<string> _log; //общий лог со всей инфой
+        List<string> _logSuccess;//лог успешных заходов
+        List<string> _fails;//лог ошибок
         bool isRun = true;//флаг для остановки процесса внутри btnConnect_Click
 
         //для секундомера
@@ -66,8 +64,8 @@ namespace MartsTelnet
             chkBoxShowRes != null)
                 if (txtoxLogin.Text != "" &&
                     txtboxPassword.Password != "" &&
-                    _devices.Count != 0 &&
-                    _commands.Count != 0)
+                    _devices.Count != 0 )
+                  //  && _commands.Count != 0) //закомитил для возможности запуска программы без команд (т.е тупо авторизация)
                 {
                     btnRun.IsEnabled = true;
                     btnTestConnect.IsEnabled = true;
@@ -106,8 +104,89 @@ namespace MartsTelnet
             btnShowLog.IsEnabled = status;
             btnShowLogSuccess.IsEnabled = status;
             btnFails.IsEnabled = status;
+            chkBoxSaveLogs.IsEnabled = status;
 
             btnReset.IsEnabled = status;
+        }
+        void saveLog()
+        {
+            string[] tmp = txtboxIP.Text.Split("\\");
+            string directory = tmp[tmp.Length - 1] + "_log ";
+
+
+            var fileDialog = new System.Windows.Forms.FolderBrowserDialog();
+            fileDialog.Description = "Выбор места для папки лога "+ directory;
+            switch (fileDialog.ShowDialog())
+            {
+                case System.Windows.Forms.DialogResult.OK:
+                    directory = fileDialog.SelectedPath + "\\" + directory;
+
+                    if (txtboxFilter.Text != "")
+                        directory += "Filter-" + txtboxFilter.Text;
+
+                    if (txtboxWait.Text!="")
+                       directory +=  " Wait-" + txtboxWait.Text;
+
+
+                    try
+                    {
+                        if (!Directory.Exists(directory))
+                            Directory.CreateDirectory(directory);
+                        if (_log.Count!=0)
+                        { using (FileStream fs = new FileStream(directory + "\\" + btnShowLog.Content.ToString() + ".txt", FileMode.Create))
+                        {
+
+                                using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
+                                {
+                                    foreach (string iter in _log)
+                                    {
+                                        sw.WriteLine(iter);
+                                        sw.WriteLine("##############################");
+                                    }
+                                }   }
+                        }
+                        if (_logSuccess.Count!=0)
+                        { 
+                        using (FileStream fs = new FileStream(directory + "\\" + btnShowLogSuccess.Content.ToString() + ".txt", FileMode.Create))
+                        {
+
+                                using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
+                                {
+                                    foreach (string iter in _logSuccess)
+                                    {
+                                        sw.WriteLine(iter);
+                                        sw.WriteLine("##############################");
+                                    }
+                                }  }
+                        }
+                        if (_fails.Count!=0)
+                        using (FileStream fs = new FileStream(directory + "\\" + "Errors Log.txt", FileMode.Create))
+                        {
+
+                            using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
+                            {
+                                foreach (string iter in _fails)
+                                {
+                                    sw.WriteLine(iter);
+                                    sw.WriteLine("##############################");
+                                }
+                            }
+                        }
+                        MessageBox.Show("Лог сохранен в папке: " + directory);
+
+                    }
+
+                    catch (ArgumentException ex)
+                    {
+                        MessageBox.Show("Argument" + ex.Message.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Возникла ошибка при записи:\n" + ex.Message.ToString());
+                    }
+                    break;
+            }
+
         }
 
 
@@ -147,7 +226,6 @@ namespace MartsTelnet
             ShowList showList = new ShowList(btnShowLog.Content.ToString(), _log);
             showList.ShowDialog();
         }
-
         private void btnShowLogSuccess_Click(object sender, RoutedEventArgs e)
         {
             ShowList showList = new ShowList(btnShowLogSuccess.Content.ToString(), _logSuccess);
@@ -227,10 +305,16 @@ namespace MartsTelnet
         }
         private void btnTestConnect_Click(object sender, RoutedEventArgs e)
         {
+            //Обнуляем значения
+            _log.Clear();
+            _logSuccess.Clear();
+            _fails.Clear();
+
             isEnableElements(false);
             myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password, _devices[0]);
             session.addComands(_commands);
             session.runCommands(true);
+
             isEnableElements(true);
         }
         
@@ -278,12 +362,13 @@ namespace MartsTelnet
             btnStop.Visibility = Visibility.Visible;
             btnStop.IsEnabled = true;
 
+            
             myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password,"",Convert.ToInt32(txtboxPort.Text),
                 txtboxFilter.Text!=""? txtboxFilter.Text: string.Empty );
             session.addComands(_commands);
-
             session._waitResult = txtboxWait.Text;
            
+            //запуск работы цикла
             stopWatch.Start();
             dispatcherTimer.Start();
             foreach (string device in _devices)
@@ -294,8 +379,7 @@ namespace MartsTelnet
                     stopWatch.Stop();
                     lblStatus.Content = device + " - Процесс остановлен";
                     MessageBox.Show(lblStatus.Content.ToString());
-                    _log.Add((_log.Count + 1) + ")" + lblStatus.Content);
-
+                    _log.Add((_log.Count) + ")" + lblStatus.Content);
                     break;
                 }
 
@@ -307,12 +391,12 @@ namespace MartsTelnet
                 {
                     lblStatus.Content = device + " - Отправлено";
                     lblProgress.Content = (_log.Count + 1 - _fails.Count).ToString() + "/" + prgBar.Maximum;
-                    _logSuccess.Add((_logSuccess.Count + 1) + ")" + session._log);
+                    _logSuccess.Add((_logSuccess.Count) + ")" + session._log);
                 }
                 else
                 {
                     lblStatus.Content = device + " - Ошибка";
-                    _fails.Add(session._log);
+                    _fails.Add((_fails.Count+1)+")" +session._log);
                     btnFails.Visibility = Visibility.Visible;
                     btnFails.Content = " Ошибки: " + _fails.Count();
                 }
@@ -341,84 +425,11 @@ namespace MartsTelnet
                 btnFails.IsEnabled = true;
 
             if (chkBoxSaveLogs.IsChecked.Value)
-            {
                 saveLog();
-            }
-
-        }
-
-        void saveLog()
-        {
-            string[] tmp = txtboxIP.Text.Split("\\");
-            string directory = tmp[tmp.Length-1] + "_log ";
-
            
-            var fileDialog = new System.Windows.Forms.FolderBrowserDialog();
-            fileDialog.Description = "Выбор папки для лога";
-                switch (fileDialog.ShowDialog())
-                {
-                    case System.Windows.Forms.DialogResult.OK:
-                    directory = fileDialog.SelectedPath +"\\"+ directory+txtboxFilter.Text+" "+txtboxWait.Text;
-
-
-                try
-                {
-                        if (!Directory.Exists(directory))
-                            Directory.CreateDirectory(directory);
-
-                        using (FileStream fs = new FileStream(directory + "\\" + btnShowLog.Content.ToString() + ".txt", FileMode.Create))
-                        {
-                  
-                            using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
-                            {
-                                foreach (string iter in _log)
-                                {
-                                    sw.WriteLine(iter);
-                                    sw.WriteLine("##############################");
-                                }
-                            }
-                        }
-
-                        using (FileStream fs = new FileStream(directory + "\\" + btnShowLogSuccess.Content.ToString() + ".txt", FileMode.Create))
-                        {
-
-                            using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
-                            {
-                                foreach (string iter in _logSuccess)
-                                {
-                                    sw.WriteLine(iter);
-                                    sw.WriteLine("##############################");
-                                }
-                            }
-                        }
-                        using (FileStream fs = new FileStream(directory + "\\" + "Errors Log.txt", FileMode.Create))
-                        {
-
-                            using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
-                            {
-                                foreach (string iter in _fails)
-                                {
-                                    sw.WriteLine(iter);
-                                    sw.WriteLine("##############################");
-                                }
-                            }
-                        }
-                MessageBox.Show("Лог сохранен в папке: " + directory);
-
-                    }
-
-                    catch (ArgumentException ex)
-                    {
-                        MessageBox.Show("Argument" + ex.Message.ToString());
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Возникла ошибка при записи:\n" + ex.Message.ToString());
-                    }
-                    break;
-            }
 
         }
+
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             isRun = false;
@@ -449,6 +460,10 @@ namespace MartsTelnet
             lblClock.Content = string.Empty;
             checkComlete();
         }
-
+        private void chkBoxSaveLogs_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_log.Count != 0)
+                saveLog();
+        }
     }
 }

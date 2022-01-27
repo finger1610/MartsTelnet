@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using PrimS.Telnet;
 using System.Windows;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MartsTelnet
 {

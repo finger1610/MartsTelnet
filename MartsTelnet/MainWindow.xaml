@@ -85,16 +85,16 @@
                 <ToolTip Content="Вывод результата после каждой отправки команд"/>
             </CheckBox.ToolTip>
         </CheckBox>
-        
-        <CheckBox x:Name="chkBoxSaveLogs" Content="Сохранить весь лог" HorizontalAlignment="Left" Margin="220,205,0,0" VerticalAlignment="Top">
+
+        <CheckBox x:Name="chkBoxSaveLogs" Content="Сохранить весь лог" HorizontalAlignment="Left" Margin="220,205,0,0" VerticalAlignment="Top" Checked="chkBoxSaveLogs_Checked">
             <CheckBox.ToolTip>
                 <ToolTip Content="Сохранение лога рядом с исходным файлом с адресами"/>
             </CheckBox.ToolTip>
         </CheckBox>
 
 
-        <ProgressBar x:Name="prgBar" HorizontalAlignment="Left" Height="12" Margin="28,247,0,0" VerticalAlignment="Top" Width="382" Visibility="Hidden"/>
-        <Label x:Name="lblProgress" Content="0/0" HorizontalAlignment="Left" Margin="429,240,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
+        <ProgressBar x:Name="prgBar" HorizontalAlignment="Left" Height="12" Margin="28,247,0,0" VerticalAlignment="Top" Width="382" />
+        <Label x:Name="lblProgress" Content="0/0" HorizontalAlignment="Left" Margin="413,240,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnFails" Content="Ошибки:   " HorizontalAlignment="Left" Margin="387,271,0,0" VerticalAlignment="Top" Foreground="#FFF50000"  Click="btnFails_Click" Visibility="Hidden"/>
         <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="213,271,0,0" VerticalAlignment="Top" Click="btnStop_Click" Height="32" Width="48" IsEnabled="False" Visibility="Hidden"/>
 
@@ -105,7 +105,7 @@
             <Button.ToolTip>
                 <ToolTip Content="Сбросить все значения в программе"/>
             </Button.ToolTip>
-            
+
         </Button>
 
 
