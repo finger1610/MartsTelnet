@@ -16,6 +16,7 @@ namespace MartsTelnet
         string _filter = string.Empty;
         public string _log = string.Empty;
         public string _waitResult = string.Empty;
+        public bool _dinamicChange = false;
 
         public myTelnet(string user, string password, string ip, int port, string filter)
         {
@@ -35,6 +36,7 @@ namespace MartsTelnet
                 _commands.Add(command);
             }
         }
+
         //автоматическая отпрпавка без вывода
 
         /// <summary>
@@ -73,7 +75,7 @@ namespace MartsTelnet
             return false;
         }
 
-        public bool runCommands(bool showMessage = false)
+        public bool runCommands(bool showMessage,string dinComm)
         {
             _log = _ip + "\n";
             try
@@ -98,12 +100,16 @@ namespace MartsTelnet
                     client.WriteLine("");
                     client.ReadAsync();
 
-                    //Отправляем на устройство
+                   // Отправляем на устройство
                     foreach (string command in _commands)
                     {
-                        client.WriteLine(command);
-                        if (!response(client, true))
-                            return false;
+                        //Условие для динамической замены
+                        if (command.Contains("%%%") && _dinamicChange)
+                            client.WriteLine(command.Replace("%%%", dinComm));
+                        else
+                            client.WriteLine(command);
+                      if (!response(client, true))
+                           return false;
                     }
 
                     //ожидание результата на выходе

@@ -11,18 +11,28 @@ namespace MartsTelnet
     /// </summary>
     public partial class ShowList : Window
     {
-        string _device = "10.222.8.10";
-        readonly List<string> _IP;
-
-        public ShowList(string name,List<string> ip)
+       
+      readonly  List<string> _IP;
+        public ShowList(string name,Dictionary<string,string> ip)
         {
            this.Title = name;
+            _IP = new List<string>();
+            foreach (string str in ip.Keys)
+            {
+                _IP.Add(str);
+            }
+            InitializeComponent();
+            lstboxIP.ItemsSource = _IP;
+        }
+        public ShowList(string name, List<string> ip)
+        {
+            this.Title = name;
             _IP = ip;
             InitializeComponent();
             lstboxIP.ItemsSource = _IP;
         }
 
-        
+
 
         private void lstboxIP_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -43,13 +53,11 @@ namespace MartsTelnet
             var result = fileDialog.ShowDialog();
             switch (result)
             {
-                case System.Windows.Forms.DialogResult.OK:
-                    var fileName = fileDialog.FileName;
-  
-                    //Считывание из файла
+                case System.Windows.Forms.DialogResult.OK: 
+                    //запись в файл
                     try
                     {
-                        using (FileStream fs = new FileStream(fileName, FileMode.OpenOrCreate))
+                        using (FileStream fs = new FileStream(fileDialog.FileName, FileMode.OpenOrCreate))
                         {
                             using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
                             {
@@ -60,7 +68,7 @@ namespace MartsTelnet
                                }
                             }
                         }
-                        MessageBox.Show("Содержимое сохранено в файле " + fileName);                 
+                        MessageBox.Show("Содержимое сохранено в файле " + fileDialog.FileName);                 
                     }
                     catch (Exception ex)
                     {
