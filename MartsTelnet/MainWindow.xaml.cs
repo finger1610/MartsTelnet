@@ -18,11 +18,14 @@ namespace MartsTelnet
     {
         Dictionary<string, string> _devices;//коллекция для сохрания ip адреса и строки под замену в комманде (динамическая замена)
         List<string> _commands;
+        List<string> _additCommands;
         List<string> _log; //общий лог со всей инфой
         List<string> _logSuccess;//лог успешных заходов
         List<string> _fails;//лог ошибок
         bool isRun = true;//флаг для остановки процесса внутри btnConnect_Click
-     
+        string _key = "%%%";
+
+
         //для секундомера
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
         Stopwatch stopWatch = new Stopwatch();
@@ -33,12 +36,15 @@ namespace MartsTelnet
             _devices = new Dictionary<string, string>();
             _log = new List<string>();
             _commands = new List<string>();
+            _additCommands = new List<string>();
+
             _fails = new List<string>();
 
             _logSuccess = new List<string>();
 
-
             InitializeComponent();
+            chkBoxDinChangeToopTip.Content = "Будет менять фрагмент " + _key + " на на текст из файла с IP адресами";
+           
             dispatcherTimer.Tick += new EventHandler(dt_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 1);
         }
@@ -65,8 +71,8 @@ namespace MartsTelnet
             chkBoxShowRes != null)
                 if (txtoxLogin.Text != "" &&
                     txtboxPassword.Password != "" &&
-                    _devices.Count != 0 )
-                  //  && _commands.Count != 0) //закомитил для возможности запуска программы без команд (т.е тупо авторизация)
+                    _devices.Count != 0)
+                //  && _commands.Count != 0) //закомитил для возможности запуска программы без команд (т.е тупо авторизация)
                 {
                     btnRun.IsEnabled = true;
                     btnTestConnect.IsEnabled = true;
@@ -92,6 +98,7 @@ namespace MartsTelnet
 
             txtboxFilter.IsEnabled = status;
             txtboxWait.IsEnabled = status;
+            btnCommandAdterfind.IsEnabled = status;
 
 
             btnFileDialog.IsEnabled = status;
@@ -110,14 +117,14 @@ namespace MartsTelnet
 
             btnReset.IsEnabled = status;
         }
-       private void saveLog()
+        private void saveLog()
         {
             string[] tmp = txtboxIP.Text.Split("\\");
             string directory = tmp[tmp.Length - 1] + "_log ";
 
 
             var fileDialog = new System.Windows.Forms.FolderBrowserDialog();
-            fileDialog.Description = "Выбор места для папки лога "+ directory;
+            fileDialog.Description = "Выбор места для папки лога " + directory;
             switch (fileDialog.ShowDialog())
             {
                 case System.Windows.Forms.DialogResult.OK:
@@ -126,8 +133,8 @@ namespace MartsTelnet
                     if (txtboxFilter.Text != "")
                         directory += "Filter-" + txtboxFilter.Text;
 
-                    if (txtboxWait.Text!="")
-                       directory +=  " Wait-" + txtboxWait.Text;
+                    if (txtboxWait.Text != "")
+                        directory += " Wait-" + txtboxWait.Text;
 
 
                     try
@@ -136,8 +143,8 @@ namespace MartsTelnet
                             Directory.CreateDirectory(directory);
 
                         directory = directory.TrimEnd(' ');
-                        if (_log.Count!=0)         
-                        {   
+                        if (_log.Count != 0)
+                        {
                             using (FileStream fs = new FileStream(directory + "\\" + btnShowLog.Content.ToString() + ".txt", FileMode.Create))
                             {
                                 using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
@@ -147,12 +154,13 @@ namespace MartsTelnet
                                         sw.WriteLine(iter);
                                         sw.WriteLine("##############################");
                                     }
-                            }   }
+                                }
+                            }
                         }
-                        if (_logSuccess.Count!=0)
-                        { 
-                        using (FileStream fs = new FileStream(directory + "\\" + btnShowLogSuccess.Content.ToString() + ".txt", FileMode.Create))
+                        if (_logSuccess.Count != 0)
                         {
+                            using (FileStream fs = new FileStream(directory + "\\" + btnShowLogSuccess.Content.ToString() + ".txt", FileMode.Create))
+                            {
 
                                 using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
                                 {
@@ -161,21 +169,22 @@ namespace MartsTelnet
                                         sw.WriteLine(iter);
                                         sw.WriteLine("##############################");
                                     }
-                                }  }
-                        }
-                        if (_fails.Count!=0)
-                        using (FileStream fs = new FileStream(directory + "\\" + "Errors Log.txt", FileMode.Create))
-                        {
-
-                            using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
-                            {
-                                foreach (string iter in _fails)
-                                {
-                                    sw.WriteLine(iter);
-                                    sw.WriteLine("##############################");
                                 }
                             }
                         }
+                        if (_fails.Count != 0)
+                            using (FileStream fs = new FileStream(directory + "\\" + "Errors Log.txt", FileMode.Create))
+                            {
+
+                                using (StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.UTF8))
+                                {
+                                    foreach (string iter in _fails)
+                                    {
+                                        sw.WriteLine(iter);
+                                        sw.WriteLine("##############################");
+                                    }
+                                }
+                            }
                         MessageBox.Show("Лог сохранен в папке: " + directory);
 
                     }
@@ -193,7 +202,6 @@ namespace MartsTelnet
 
         }
 
- 
         private void readFile()
         {
 
@@ -202,7 +210,7 @@ namespace MartsTelnet
 
             //Считывание из файла
             _devices.Clear();
-        
+
             string tmp;
             string ipTmp;
             string valueTmp;
@@ -228,7 +236,7 @@ namespace MartsTelnet
 
                                 if (valueTmp != ipTmp)
                                     _devices.Add(ipTmp, valueTmp);
-                               else
+                                else
                                     _devices.Add(ipTmp, "");
 
                             }
@@ -272,8 +280,7 @@ namespace MartsTelnet
             checkComlete();
         }
 
-
-       private void txtboxIP_TouchEnter(object sender, System.Windows.Input.TouchEventArgs e)
+        private void txtboxIP_TouchEnter(object sender, System.Windows.Input.TouchEventArgs e)
         {
             readFile();
         }
@@ -282,6 +289,16 @@ namespace MartsTelnet
         {
             checkComlete();
         }
+
+        private void txtboxWait_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (txtboxWait.Text != "")
+                btnCommandAdterfind.IsEnabled = true;
+            else
+                btnCommandAdterfind.IsEnabled = false;
+        }
+
+
 
         //Buttons_click
         private void btnAddComands_Click(object sender, RoutedEventArgs e)
@@ -302,10 +319,22 @@ namespace MartsTelnet
                     chkBoxDinChange.IsEnabled = false;
                     chkBoxDinChange.IsChecked = false;
                 }
-               
-        }
+
+            }
             checkComlete();
         }
+
+        private void btnCommandAdterfind_Click(object sender, RoutedEventArgs e)
+        {
+            addComands addComands = new addComands(_additCommands);
+            addComands.ShowDialog();
+            if (_additCommands.Count != 0)
+                chkBoxInvertDisChange.IsEnabled = true;
+            else
+                chkBoxInvertDisChange.IsEnabled = false;
+
+        }
+
         private void btnShow_Click(object sender, RoutedEventArgs e)
         {
             ShowList showList = new ShowList(btnShowLog.Content.ToString(), _log);
@@ -343,11 +372,11 @@ namespace MartsTelnet
                 lblFindIP.Visibility = Visibility.Hidden;
                 btncheckList.IsEnabled = false;
             }
-        
+
         }
         private void btncheckList_Click(object sender, RoutedEventArgs e)
         {
-            ShowList obj = new ShowList("List IP addresses",_devices);
+            ShowList obj = new ShowList("List IP addresses", _devices);
             obj.Show();
         }
         private void btnTestConnect_Click(object sender, RoutedEventArgs e)
@@ -360,11 +389,22 @@ namespace MartsTelnet
             isEnableElements(false);
             myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password, _devices.Keys.First());
             session.addComands(_commands);
-            session.runCommands(true,"");
+
+            if (_additCommands.Count != 0)
+                session.addAltComands(txtboxWait.Text, _additCommands, chkBoxDinChange.IsChecked.Value, chkBoxInvertDisChange.IsChecked.Value);
+
+            if (txtboxFilter.Text!="")
+                session.addfilter(txtboxFilter.Text);
+
+            if (txtboxWait.Text != "")
+                session.waitResultInit(txtboxWait.Text);
+
+
+            session.runCommands(true, _devices.Values.First());
 
             isEnableElements(true);
         }
-        
+
         //Основная кнопка. Тут всё запускается
         private async void btnRun_Click(object sender, RoutedEventArgs e)
         {
@@ -388,16 +428,21 @@ namespace MartsTelnet
 
             //первая запись в логе с системной инфой
             string commands = string.Empty;
-            foreach(string str in _commands)
-                commands += str+"\n";
+            string altcommands = string.Empty;
+            foreach (string str in _commands)
+                commands += str + "\n";
+            foreach (string str in _additCommands)
+                altcommands += str + "\n";
 
-          
+
             _log.Add("Колличество устройств: " + _devices.Count +
               "\nКоманды на отправку: " + commands +
-              (chkBoxDinChange.IsChecked.Value?"\nВключена динамическая замена %%%":string.Empty)+
-             "\nПорт: "+ txtboxPort.Text +
+              (chkBoxDinChange.IsChecked.Value ? "\nВключена динамическая замена "+_key : string.Empty) +
+             "\nПорт: " + txtboxPort.Text +
               (txtboxFilter.Text != "" ? "\nФильтр: " + txtboxFilter.Text : string.Empty) +
-              (txtboxWait.Text!="" ? "\nОжидание вывода: " + txtboxWait.Text : string.Empty) + "\n");
+              (txtboxWait.Text != "" ? "\nОжидание вывода: " + txtboxWait.Text : string.Empty) + "\n"+
+              (chkBoxInvertDisChange.IsChecked.Value? "\nВключена инверсия действия от ожидания": string.Empty) +
+              (_additCommands.Count!=0 ? "\nДействие: " + altcommands : string.Empty) +"\n");
             _logSuccess.Add("Лог успешных проходов\n");
 
             bool checkBoxRes;
@@ -410,14 +455,24 @@ namespace MartsTelnet
             btnStop.Visibility = Visibility.Visible;
             btnStop.IsEnabled = true;
 
-            
-            myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password,"",Convert.ToInt32(txtboxPort.Text),
-                txtboxFilter.Text!=""? txtboxFilter.Text: string.Empty);
+            //инициализируем данные для работы c Telnet
+            myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password, "", Convert.ToInt32(txtboxPort.Text),
+                                           txtboxFilter.Text != "" ? txtboxFilter.Text : string.Empty,_key);
+
             session.addComands(_commands);
-            session._waitResult = txtboxWait.Text;
-            session._dinamicChange = chkBoxDinChange.IsChecked.Value;
+
+            
+            
+            if (txtboxFilter.Text!="")
+                session.addfilter(txtboxFilter.Text);
+
+            if (txtboxWait.Text!="")
+                session.waitResultInit(txtboxWait.Text);
+
+            if (_additCommands.Count != 0)
+                session.addAltComands(txtboxWait.Text, _additCommands, chkBoxDinChange.IsChecked.Value,chkBoxInvertDisChange.IsChecked.Value);
+
             string device;
-           
 
             //запуск работы цикла
             stopWatch.Start();
@@ -425,7 +480,6 @@ namespace MartsTelnet
             foreach (KeyValuePair<string, string> pair in _devices)
             {
                 device = pair.Key;
-               
 
                 lblStatus.Content = device + " - Отправка...";
                 if (!isRun)
@@ -439,18 +493,18 @@ namespace MartsTelnet
 
                 session._ip = device;
 
-                checkBoxRes  = chkBoxShowRes.IsChecked.Value;//если кинуть напрямую в метод, то выдает ошибку доступа
+                checkBoxRes = chkBoxShowRes.IsChecked.Value;//если кинуть напрямую в метод, то выдает ошибку доступа
 
-                if (await Task.Run(() =>  session.runCommands(checkBoxRes, pair.Value)))
+                if (await Task.Run(() => session.runCommands(checkBoxRes, pair.Value)))
                 {
                     lblStatus.Content = device + " - Отправлено";
-                    lblProgress.Content = ((_log.Count) - _fails.Count).ToString() + "/" + prgBar.Maximum;
+                    lblProgress.Content = (_log.Count - _fails.Count).ToString() + "/" + prgBar.Maximum;
                     _logSuccess.Add(_logSuccess.Count + ")" + session._log);
                 }
                 else
                 {
                     lblStatus.Content = device + " - Ошибка";
-                    _fails.Add(_fails.Count+1+")" +session._log);
+                    _fails.Add(_fails.Count + 1 + ")" + session._log);
                     btnFails.Visibility = Visibility.Visible;
                     btnFails.Content = " Ошибки: " + _fails.Count();
                 }
@@ -464,8 +518,8 @@ namespace MartsTelnet
             }
             //  elapsedtimeitem.Items.Add(curentTime);
 
-            _log[0] += "Выполнено успешно: " + (_log.Count-1 - _fails.Count) + "\nВремя выполнения: " + lblClock.Content+ "\n"+
-                (!isRun? "Прерывание вручную":"Остановка по окончанию адресов");
+            _log[0] += "Выполнено успешно: " + (_log.Count - 1 - _fails.Count) + "\nВремя выполнения: " + lblClock.Content + "\n" +
+                (!isRun ? "Прерывание вручную" : "Остановка по окончанию адресов");
             _logSuccess[0] += "Колличество устройств: " + (_logSuccess.Count - 1);
             isEnableElements(true);
             btnStop.Visibility = Visibility.Hidden;
@@ -480,7 +534,7 @@ namespace MartsTelnet
 
             if (chkBoxSaveLogs.IsChecked.Value)
                 saveLog();
-           
+
 
         }
 
@@ -500,6 +554,8 @@ namespace MartsTelnet
             _devices.Clear();
             _fails.Clear();
             _log.Clear();
+            chkBoxDinChange.IsChecked = false;
+            chkBoxDinChange.IsEnabled = false;
 
             btnStop.Visibility = Visibility.Hidden;
             btnFails.Visibility = Visibility.Hidden;
@@ -510,7 +566,7 @@ namespace MartsTelnet
             lblProgress.Content = string.Empty;
             lblStatus.Content = string.Empty;
             lblFindIP.Content = string.Empty;
-            
+
             lblClock.Content = string.Empty;
             checkComlete();
         }
@@ -519,5 +575,6 @@ namespace MartsTelnet
             if (_log.Count != 0)
                 saveLog();
         }
+
     }
 }
