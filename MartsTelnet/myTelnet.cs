@@ -21,6 +21,8 @@ namespace MartsTelnet
    
         bool _isDinamicChange = false;
         bool _isInvertDinChange = false;
+        bool _isSelective = false;
+        bool _isFindSelective = false;
         string _key = string.Empty;
 
 
@@ -58,9 +60,11 @@ namespace MartsTelnet
             }
 
         }
-        public void waitResultInit(string wait)
+        public void waitResultInit(string wait,bool isSelectve)
         {
+            _isSelective = isSelectve;
             _waitResult = wait;
+
         }
         public void addfilter(string filter)
         {
@@ -109,24 +113,50 @@ namespace MartsTelnet
                     }
 
 
-                    //длязамены команд на лету
+                    //для добавления команд на лету
+             
                     if (wait&&_waitResult!="")
                     {
-                        if (_alterCommands.Count!=0)
+                        if (!_isSelective)//проверка на выборочную отправку дополнительных комманд
                         {
+                            if (_alterCommands.Count != 0)
+                            {
 
-                            if (!_isInvertDinChange)
-                            {
-                                if (tmp.Contains(_waitResult))
-                                    findInProc(client);
+                                if (!_isInvertDinChange)//проверка на принцип выполнения. либо при обнаружении фрагмента, либо наоборот
+                                {
+                                    if (tmp.Contains(_waitResult))
+                                        findInProc(client);
+                                }
+                                else
+                                {
+                                    if (!tmp.Contains(_waitResult))
+                                        findInProc(client);
+                                }
                             }
-                            else
+                        }
+                        else
+                        {
+                            if (_isFindSelective)
                             {
-                                if (!tmp.Contains(_waitResult))
-                                    findInProc(client);
+                                _isFindSelective = false;
+                                if (_alterCommands.Count != 0)
+                                {
+
+                                    if (!_isInvertDinChange)//код дублируется из if. Умнее не придумал...
+                                    {
+                                        if (tmp.Contains(_waitResult))
+                                            findInProc(client);
+                                    }
+                                    else
+                                    {
+                                        if (!tmp.Contains(_waitResult))
+                                            findInProc(client);
+                                    }
+                                }
                             }
                         }
                     }
+
                     
                     if (addLog)
                         _log += tmp;
@@ -165,9 +195,19 @@ namespace MartsTelnet
 
         private bool send (Client client,List <string> commands, string dinComm)
         {
+            string command;
             // Отправляем на устройство
-            foreach (string command in commands)
+            foreach (string commandFor in commands)
             {
+                command = commandFor;//для удаления первых 3 символов ### 
+                if (command.Length > 3)
+                {
+                    if (command.Substring(0, 3) == "###" && _isSelective)
+                    {
+                        _isFindSelective = true;//Включение добавления на лету после данной команды
+                        command = command.Substring(3); 
+                    }
+                }
                 //Условие для динамической замены
                 if (_isDinamicChange && command.Contains(_key))
                     client.WriteLine(command.Replace(_key, dinComm));
@@ -176,15 +216,17 @@ namespace MartsTelnet
 
                 if (!response(client, true,false,true))
                     return false;
+                
             }
 
-
+            //поиск фаргмента после выполнения набора команд (смотри входное условие)
             if (_waitResult != ""&& _alterCommands.Count==0)
             {
                 if (_log.Contains(_waitResult))
                 {
                     string[] tmp = _log.Split("\n");
                     _log = _ip + " - ";
+
                     foreach (string row in tmp)
                     {
                         if (row.Contains(_waitResult))
@@ -200,7 +242,7 @@ namespace MartsTelnet
             return true;
         }
 
-        public bool runCommands(bool showMessage,string dinComm)
+        public bool runCommands(string dinComm)
         {
             _log = _ip + "\n";
             try
@@ -214,9 +256,6 @@ namespace MartsTelnet
 
                     if (!send(client,_commands, dinComm))
                         return false;
-
-                    if (showMessage)
-                        MessageBox.Show(_log);
 
                     client.Dispose();
                     tcpByteStream.Close();

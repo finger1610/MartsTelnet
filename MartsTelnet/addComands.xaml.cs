@@ -43,5 +43,11 @@ namespace MartsTelnet
         {
 
         }
+
+        private void btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            _commands.Clear();
+            this.Close();
+        }
     }
 }

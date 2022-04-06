@@ -84,6 +84,25 @@ namespace MartsTelnet
                     btnTestConnect.IsEnabled = false;
                     chkBoxShowRes.IsEnabled = false;
                 }
+
+            //Проверка на наличие ключа
+            if (_commands.Count != 0)
+            {
+                lblComAdd.Visibility = Visibility.Visible;
+                foreach (string str in _commands)
+                {
+                    if (str.Contains(_key))
+                    {
+                        chkBoxDinChange.IsEnabled = true;
+                        break;
+                    }
+
+                    chkBoxDinChange.IsEnabled = false;
+                    chkBoxDinChange.IsChecked = false;
+                }
+            }
+            else
+                lblComAdd.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -106,6 +125,7 @@ namespace MartsTelnet
 
             txtboxPort.IsEnabled = status;
             btnAddComands.IsEnabled = status;
+            chkBoxSelective.IsEnabled = status;
             chkBoxDinChange.IsEnabled = status;
 
             btnTestConnect.IsEnabled = status;
@@ -293,9 +313,15 @@ namespace MartsTelnet
         private void txtboxWait_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (txtboxWait.Text != "")
+            {
                 btnCommandAdterfind.IsEnabled = true;
+                chkBoxSelective.IsEnabled = true;
+            }
             else
+            {
                 btnCommandAdterfind.IsEnabled = false;
+                chkBoxSelective.IsEnabled = false;
+            }
         }
 
 
@@ -305,22 +331,7 @@ namespace MartsTelnet
         {
             addComands addComands = new addComands(_commands);
             addComands.ShowDialog();
-            if (_commands.Count != 0)
-            {
-                lblComAdd.Visibility = Visibility.Visible;
-                foreach (string str in _commands)
-                {
-                    if (str.Contains("%%%"))
-                    {
-                        chkBoxDinChange.IsEnabled = true;
-                        break;
-                    }
-
-                    chkBoxDinChange.IsEnabled = false;
-                    chkBoxDinChange.IsChecked = false;
-                }
-
-            }
+           
             checkComlete();
         }
 
@@ -397,12 +408,13 @@ namespace MartsTelnet
                 session.addfilter(txtboxFilter.Text);
 
             if (txtboxWait.Text != "")
-                session.waitResultInit(txtboxWait.Text);
+                session.waitResultInit(txtboxWait.Text, chkBoxSelective.IsChecked.Value);
 
-
-            session.runCommands(true, _devices.Values.First());
+            session.runCommands(_devices.Values.First());
+            MessageBox.Show(session._log);
 
             isEnableElements(true);
+            checkComlete();
         }
 
         //Основная кнопка. Тут всё запускается
@@ -436,7 +448,7 @@ namespace MartsTelnet
 
 
             _log.Add("Колличество устройств: " + _devices.Count +
-              "\nКоманды на отправку: " + commands +
+              "\nКоманды на отправку:\n" + commands +
               (chkBoxDinChange.IsChecked.Value ? "\nВключена динамическая замена "+_key : string.Empty) +
              "\nПорт: " + txtboxPort.Text +
               (txtboxFilter.Text != "" ? "\nФильтр: " + txtboxFilter.Text : string.Empty) +
@@ -445,7 +457,7 @@ namespace MartsTelnet
               (_additCommands.Count!=0 ? "\nДействие: " + altcommands : string.Empty) +"\n");
             _logSuccess.Add("Лог успешных проходов\n");
 
-            bool checkBoxRes;
+           
             //отключаем элементы управления
             isEnableElements(false);
 
@@ -467,7 +479,7 @@ namespace MartsTelnet
                 session.addfilter(txtboxFilter.Text);
 
             if (txtboxWait.Text!="")
-                session.waitResultInit(txtboxWait.Text);
+                session.waitResultInit(txtboxWait.Text,chkBoxSelective.IsChecked.Value);
 
             if (_additCommands.Count != 0)
                 session.addAltComands(txtboxWait.Text, _additCommands, chkBoxDinChange.IsChecked.Value,chkBoxInvertDisChange.IsChecked.Value);
@@ -493,9 +505,8 @@ namespace MartsTelnet
 
                 session._ip = device;
 
-                checkBoxRes = chkBoxShowRes.IsChecked.Value;//если кинуть напрямую в метод, то выдает ошибку доступа
 
-                if (await Task.Run(() => session.runCommands(checkBoxRes, pair.Value)))
+                if (await Task.Run(() => session.runCommands(pair.Value)))
                 {
                     lblStatus.Content = device + " - Отправлено";
                     lblProgress.Content = (_log.Count - _fails.Count).ToString() + "/" + prgBar.Maximum;
@@ -508,6 +519,10 @@ namespace MartsTelnet
                     btnFails.Visibility = Visibility.Visible;
                     btnFails.Content = " Ошибки: " + _fails.Count();
                 }
+
+                if (chkBoxShowRes.IsChecked.Value)
+                    MessageBox.Show(session._log);
+                
                 _log.Add(_log.Count + ") " + session._log);
                 prgBar.Value++;
             }
@@ -522,6 +537,7 @@ namespace MartsTelnet
                 (!isRun ? "Прерывание вручную" : "Остановка по окончанию адресов");
             _logSuccess[0] += "Колличество устройств: " + (_logSuccess.Count - 1);
             isEnableElements(true);
+            checkComlete();
             btnStop.Visibility = Visibility.Hidden;
             btnStop.IsEnabled = false;
             if (isRun)

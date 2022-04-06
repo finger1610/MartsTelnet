@@ -16,7 +16,7 @@
             <Label Content="Ожидаение вывода" HorizontalAlignment="Left" Margin="-1,141,0,0" VerticalAlignment="Top"/>
 
             <Label x:Name="lblFindIP" Content="Label" HorizontalAlignment="Left" Margin="266,46,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="#FF2DF500"/>
-            <Label x:Name="lblComAdd" Content="Команды добавлены" HorizontalAlignment="Left" Margin="271,92,0,0" VerticalAlignment="Top" Visibility="Visible" Height="26"/>
+            <Label x:Name="lblComAdd" Content="Команды добавлены" HorizontalAlignment="Left" Margin="271,92,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26"/>
         </Grid>
 
         <Grid x:Name="UserContent" Margin="0,0,0,224">
@@ -71,16 +71,21 @@
                     <ToolTip x:Name="chkBoxDinChangeToopTip" Content="Будет менять фрагмент %%% на на текст из файла с IP адресами"/>
                 </CheckBox.ToolTip>
             </CheckBox>
-            <Button x:Name="btnCommandAdterfind" Content="Действие" HorizontalAlignment="Left" Margin="244,144,0,0" VerticalAlignment="Top" Click="btnCommandAdterfind_Click" IsEnabled="False"/>
+            <Button x:Name="btnCommandAdterfind" Content="Действие" HorizontalAlignment="Left" Margin="327,144,0,0" VerticalAlignment="Top" Click="btnCommandAdterfind_Click" IsEnabled="False"/>
 
             <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="429,36,0,0" VerticalAlignment="Top" Click="btnReset_Click">
                 <Button.ToolTip>
                     <ToolTip Content="Сбросить все значения в программе"/>
                 </Button.ToolTip>
             </Button>
-            <CheckBox x:Name="chkBoxInvertDisChange" Content="Инвертировать" HorizontalAlignment="Left" Margin="308,147,0,0" VerticalAlignment="Top" IsEnabled="False">
+            <CheckBox x:Name="chkBoxInvertDisChange" Content="Инвертировать" HorizontalAlignment="Left" Margin="385,147,0,0" VerticalAlignment="Top" IsEnabled="False">
                 <CheckBox.ToolTip>
                     <ToolTip Content="Будет выполняться в случае, если фрагмент не будет найден"/>
+                </CheckBox.ToolTip>
+            </CheckBox>
+            <CheckBox x:Name="chkBoxSelective" Content="Выборочно" HorizontalAlignment="Left" Margin="242,146,0,0" VerticalAlignment="Top" IsEnabled="False">
+                <CheckBox.ToolTip>
+                    <ToolTip Content="будет поиск только после команды, отмеченной ###. Перез отправкоой символы будут удалены"/>
                 </CheckBox.ToolTip>
             </CheckBox>
 
