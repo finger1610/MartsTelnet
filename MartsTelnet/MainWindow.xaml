@@ -85,7 +85,7 @@
             </CheckBox>
             <CheckBox x:Name="chkBoxSelective" Content="Выборочно" HorizontalAlignment="Left" Margin="242,146,0,0" VerticalAlignment="Top" IsEnabled="False">
                 <CheckBox.ToolTip>
-                    <ToolTip Content="будет поиск только после команды, отмеченной ###. Перез отправкоой символы будут удалены"/>
+                    <ToolTip Content="будет поиск только после команды, отмеченной ###. Перед отправкой символы будут удалены"/>
                 </CheckBox.ToolTip>
             </CheckBox>
 
