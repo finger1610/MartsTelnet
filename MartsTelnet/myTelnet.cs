@@ -8,22 +8,48 @@ namespace MartsTelnet
 {
     class myTelnet
     {
+        const double _timingIndex = 6.5; //индекс для преобразования фактических секунд в значение для кода
         string _user;
         string _password;
         int _port;
-        public string _ip;
+        string _ip { get; set; } = string.Empty;
         List<string> _commands;
         List<string> _alterCommands;
 
         string _filter = string.Empty;
-        public string _log = string.Empty;
+        string _log { get; set; } = string.Empty;
         string _waitResult = string.Empty;
-   
+
         bool _isDinamicChange = false;
         bool _isInvertDinChange = false;
         bool _isSelective = false;
         bool _isFindSelective = false;
         string _key = string.Empty;
+
+        int _timingLogin { get; set; } =65; //значение, соответствующее 10 секундам
+        int _timingCommands { get; set; }=19;
+
+        public string log
+        {
+            get { return _log; }
+            set { _log = value; }
+        }
+        public string ip
+        {
+            get { return _ip; }
+            set { _ip = value; }
+        }
+
+        public int timingLogin
+        {
+            get { return (int) (_timingLogin/ _timingIndex); }
+            set { _timingLogin =(int)( value * _timingIndex); }
+        }
+        public int timingCommands
+        {
+            get { return (int)(_timingCommands / _timingIndex);}
+            set { _timingCommands = (int)( value * _timingIndex); }
+        }
 
 
         public myTelnet(string user, string password, string ip, int port, string filter,string key)
@@ -36,6 +62,7 @@ namespace MartsTelnet
             _alterCommands = new List<string>();
             _filter = filter;
             _key = key;
+ 
         }
         public myTelnet(string user, string password, string ip) : this(user, password, ip, 23, "","") { }
 
@@ -174,18 +201,24 @@ namespace MartsTelnet
         private bool autorisacion (Client client)
         {
           
-            if (!response(client, false,false,false, 200))
+            if (!response(client, false,false,false, _timingLogin))
             {
-                _log += "Error connect";
+                _log += "Device not avaliable";
                 return false;
             }
             //авторизация
             client.WriteLine(_user);
             if (!response(client))
+            {
+                _log += " to login";
                 return false;
+            }
             client.WriteLine(_password);
             if (!response(client,false,true))
+            {
+                _log += " to login";
                 return false;
+            }
 
             client.WriteLine("");
             client.ReadAsync();
@@ -214,7 +247,7 @@ namespace MartsTelnet
                 else
                     client.WriteLine(command);
 
-                if (!response(client, true,false,true))
+                if (!response(client, true,false,true,_timingCommands))
                     return false;
                 
             }

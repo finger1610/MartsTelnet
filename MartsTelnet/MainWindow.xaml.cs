@@ -25,6 +25,8 @@ namespace MartsTelnet
         bool isRun = true;//флаг для остановки процесса внутри btnConnect_Click
         string _key = "%%%";
 
+        List<uint> _timings;
+
 
         //для секундомера
         DispatcherTimer dispatcherTimer = new DispatcherTimer();
@@ -42,9 +44,11 @@ namespace MartsTelnet
 
             _logSuccess = new List<string>();
 
+            _timings = new List<uint>();
+
             InitializeComponent();
             chkBoxDinChangeToopTip.Content = "Будет менять фрагмент " + _key + " на на текст из файла с IP адресами";
-           
+
             dispatcherTimer.Tick += new EventHandler(dt_Tick);
             dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 1);
         }
@@ -327,11 +331,18 @@ namespace MartsTelnet
 
 
         //Buttons_click
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Settings settings = new Settings(_timings);
+            settings.ShowDialog();
+        }
+
         private void btnAddComands_Click(object sender, RoutedEventArgs e)
         {
             addComands addComands = new addComands(_commands);
             addComands.ShowDialog();
-           
+
             checkComlete();
         }
 
@@ -400,22 +411,27 @@ namespace MartsTelnet
             isEnableElements(false);
             myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password, _devices.Keys.First());
             session.addComands(_commands);
-
+            if (_timings.Count > 0) 
+            {
+                session.timingLogin = (int)_timings[0];
+                session.timingCommands= (int)_timings[1];
+            }
             if (_additCommands.Count != 0)
                 session.addAltComands(txtboxWait.Text, _additCommands, chkBoxDinChange.IsChecked.Value, chkBoxInvertDisChange.IsChecked.Value);
 
-            if (txtboxFilter.Text!="")
+            if (txtboxFilter.Text != "")
                 session.addfilter(txtboxFilter.Text);
 
             if (txtboxWait.Text != "")
                 session.waitResultInit(txtboxWait.Text, chkBoxSelective.IsChecked.Value);
 
             session.runCommands(_devices.Values.First());
-            MessageBox.Show(session._log);
+            MessageBox.Show(session.log);
 
             isEnableElements(true);
             checkComlete();
         }
+
 
         //Основная кнопка. Тут всё запускается
         private async void btnRun_Click(object sender, RoutedEventArgs e)
@@ -449,15 +465,15 @@ namespace MartsTelnet
 
             _log.Add("Колличество устройств: " + _devices.Count +
               "\nКоманды на отправку:\n" + commands +
-              (chkBoxDinChange.IsChecked.Value ? "\nВключена динамическая замена "+_key : string.Empty) +
+              (chkBoxDinChange.IsChecked.Value ? "\nВключена динамическая замена " + _key : string.Empty) +
              "\nПорт: " + txtboxPort.Text +
               (txtboxFilter.Text != "" ? "\nФильтр: " + txtboxFilter.Text : string.Empty) +
-              (txtboxWait.Text != "" ? "\nОжидание вывода: " + txtboxWait.Text : string.Empty) + "\n"+
-              (chkBoxInvertDisChange.IsChecked.Value? "\nВключена инверсия действия от ожидания": string.Empty) +
-              (_additCommands.Count!=0 ? "\nДействие: " + altcommands : string.Empty) +"\n");
+              (txtboxWait.Text != "" ? "\nОжидание вывода: " + txtboxWait.Text : string.Empty) + "\n" +
+              (chkBoxInvertDisChange.IsChecked.Value ? "\nВключена инверсия действия от ожидания" : string.Empty) +
+              (_additCommands.Count != 0 ? "\nДействие: " + altcommands : string.Empty) + "\n");
             _logSuccess.Add("Лог успешных проходов\n");
 
-           
+
             //отключаем элементы управления
             isEnableElements(false);
 
@@ -469,20 +485,23 @@ namespace MartsTelnet
 
             //инициализируем данные для работы c Telnet
             myTelnet session = new myTelnet(txtoxLogin.Text, txtboxPassword.Password, "", Convert.ToInt32(txtboxPort.Text),
-                                           txtboxFilter.Text != "" ? txtboxFilter.Text : string.Empty,_key);
-
+                                           txtboxFilter.Text != "" ? txtboxFilter.Text : string.Empty, _key);
+            if (_timings.Count > 0)
+            {
+                session.timingLogin = (int)_timings[0];
+                session.timingCommands = (int)_timings[1];
+            }
             session.addComands(_commands);
 
-            
-            
-            if (txtboxFilter.Text!="")
+
+            if (txtboxFilter.Text != "")
                 session.addfilter(txtboxFilter.Text);
 
-            if (txtboxWait.Text!="")
-                session.waitResultInit(txtboxWait.Text,chkBoxSelective.IsChecked.Value);
+            if (txtboxWait.Text != "")
+                session.waitResultInit(txtboxWait.Text, chkBoxSelective.IsChecked.Value);
 
             if (_additCommands.Count != 0)
-                session.addAltComands(txtboxWait.Text, _additCommands, chkBoxDinChange.IsChecked.Value,chkBoxInvertDisChange.IsChecked.Value);
+                session.addAltComands(txtboxWait.Text, _additCommands, chkBoxDinChange.IsChecked.Value, chkBoxInvertDisChange.IsChecked.Value);
 
             string device;
 
@@ -503,27 +522,27 @@ namespace MartsTelnet
                     break;
                 }
 
-                session._ip = device;
+                session.ip = device;
 
 
-                if (await Task.Run(() => session.runCommands(pair.Value)))
-                {
+               if (await Task.Run(() => session.runCommands(pair.Value)))
+               {
                     lblStatus.Content = device + " - Отправлено";
                     lblProgress.Content = (_log.Count - _fails.Count).ToString() + "/" + prgBar.Maximum;
-                    _logSuccess.Add(_logSuccess.Count + ")" + session._log);
-                }
+                    _logSuccess.Add(_logSuccess.Count + ")" + session.log);
+               }
                 else
                 {
                     lblStatus.Content = device + " - Ошибка";
-                    _fails.Add(_fails.Count + 1 + ")" + session._log);
+                    _fails.Add(_fails.Count + 1 + ")" + session.log);
                     btnFails.Visibility = Visibility.Visible;
                     btnFails.Content = " Ошибки: " + _fails.Count();
                 }
 
                 if (chkBoxShowRes.IsChecked.Value)
-                    MessageBox.Show(session._log);
-                
-                _log.Add(_log.Count + ") " + session._log);
+                    MessageBox.Show(session.log);
+
+                _log.Add(_log.Count + ") " + session.log);
                 prgBar.Value++;
             }
 
@@ -592,5 +611,6 @@ namespace MartsTelnet
                 saveLog();
         }
 
+        
     }
 }

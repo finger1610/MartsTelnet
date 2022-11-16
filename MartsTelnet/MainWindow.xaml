@@ -88,6 +88,7 @@
                     <ToolTip Content="будет поиск только после команды, отмеченной ###. Перед отправкой символы будут удалены"/>
                 </CheckBox.ToolTip>
             </CheckBox>
+            <Button x:Name="btnSettings" Content="Дополнительно" HorizontalAlignment="Left" Margin="274,25,0,0" VerticalAlignment="Top" Click="btnSettings_Click"/>
 
         </Grid>
 
