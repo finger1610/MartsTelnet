@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MartsTelnet"
         mc:Ignorable="d"
-        Title="Settings" Height="247" Width="287">
+        Title="Settings" Height="247" Width="287" ResizeMode="NoResize">
     <Grid>
         <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="230,30,0,0" VerticalAlignment="Top" Click="btnReset_Click"/>
         <Label x:Name="lblResponseCommand" Content="отклик команды sec" HorizontalAlignment="Left" Margin="16,68,0,0" VerticalAlignment="Top"/>

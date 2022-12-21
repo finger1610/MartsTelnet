@@ -5,12 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MartsTelnet"
         mc:Ignorable="d"
-        Title="addComands" Height="450" Width="651">
+        Title="addComands" Height="450" Width="651" ResizeMode="NoResize">
     <Grid>
-        <RichTextBox x:Name="rtxtboxCommands" Margin="74,22,74,57">
+        <RichTextBox x:Name="rtxtboxCommands" Margin="74,22,74,57"  HorizontalAlignment="Left">
+            <RichTextBox.Resources>
+                <Style TargetType="{x:Type Paragraph}">
+                    <Setter Property="Margin" Value="0" />
+                </Style>
+            </RichTextBox.Resources>
+            
+            
             <FlowDocument>
                 <Paragraph>
                     <Run Text=""/>
+                    
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
