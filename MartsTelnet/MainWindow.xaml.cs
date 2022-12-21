@@ -226,11 +226,11 @@ namespace MartsTelnet
 
         }
 
-        private void readFile()
+       async private void readFile()
         {
 
             lblFindIP.Visibility = Visibility.Visible;
-            lblFindIP.Content = "Считывание...";
+            lblFindIP.Content = "Считывание";
 
             //Считывание из файла
             _devices.Clear();
@@ -244,27 +244,30 @@ namespace MartsTelnet
 
             try
             {
-                using (FileStream fs = new FileStream(txtboxIP.Text, FileMode.Open))
+              await  using (FileStream fs = new FileStream(txtboxIP.Text, FileMode.Open))
                 {
                     using (StreamReader sr = new StreamReader(fs, System.Text.Encoding.UTF8))
                     {
 
                         while (!sr.EndOfStream)
                         {
+                            lblFindIP.Content = "Считывание.";
                             tmp = sr.ReadLine();
                             if (RegIp.IsMatch(tmp))
                             {
                                 ipTmp = RegIp.Match(tmp).ToString();
                                 valueTmp = tmp.Replace(ipTmp + ' ', "");
 
-
-                                if (valueTmp != ipTmp)
-                                    _devices.Add(ipTmp, valueTmp);
-                                else
-                                    _devices.Add(ipTmp, "");
-
+                                lblFindIP.Content = "Считывание..";
+                                if (!_devices.ContainsKey(ipTmp)) //Проверка на задвоение IP адреса
+                                {
+                                    if (valueTmp != ipTmp)
+                                        _devices.Add(ipTmp, valueTmp);
+                                    else
+                                        _devices.Add(ipTmp, "");
+                                }
                             }
-
+                            lblFindIP.Content = "Считывание...";
                         }
                     }
                 }
