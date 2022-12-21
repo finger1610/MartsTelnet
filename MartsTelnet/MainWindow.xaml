@@ -5,138 +5,142 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MartsTelnet"
         mc:Ignorable="d"
-        Title="TelnetRunner" Height="425" Width="506">
-    <Grid>
-        <Grid x:Name="Lables" Margin="0,0,0,224">
-            <Label Content="Login" HorizontalAlignment="Left" Margin="73,20,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.641,0.585"/>
-            <Label Content="password" HorizontalAlignment="Left" Margin="51,46,0,0" VerticalAlignment="Top"/>
-            <Label Content="File to IP.txt" HorizontalAlignment="Left" Margin="40,69,0,0" VerticalAlignment="Top"/>
-            <Label Content="Port" HorizontalAlignment="Left" Margin="80,92,0,0" VerticalAlignment="Top"/>
-            <Label Content="Фильтр" HorizontalAlignment="Left" Margin="62,115,0,0" VerticalAlignment="Top"/>
-            <Label Content="Ожидаение вывода" HorizontalAlignment="Left" Margin="-1,141,0,0" VerticalAlignment="Top"/>
+        Title="TelnetRunner" Height="526" Width="506" ResizeMode="NoResize">
 
-            <Label x:Name="lblFindIP" Content="Label" HorizontalAlignment="Left" Margin="266,46,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="#FF2DF500"/>
-            <Label x:Name="lblComAdd" Content="Команды добавлены" HorizontalAlignment="Left" Margin="271,92,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26"/>
-        </Grid>
+    
+            <Grid x:Name="mainGrid">
+                <Grid x:Name="Lables" Margin="0,0,0,224">
+                    <Label Content="Login" HorizontalAlignment="Left" Margin="73,20,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.641,0.585"/>
+                    <Label Content="password" HorizontalAlignment="Left" Margin="51,46,0,0" VerticalAlignment="Top"/>
+                    <Label Content="File to IP.txt" HorizontalAlignment="Left" Margin="40,69,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Port" HorizontalAlignment="Left" Margin="80,92,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Фильтр" HorizontalAlignment="Left" Margin="62,115,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Ожидаение вывода" HorizontalAlignment="Left" Margin="-1,141,0,0" VerticalAlignment="Top"/>
 
-        <Grid x:Name="UserContent" Margin="0,0,0,224">
-            <TextBox x:Name="txtoxLogin" HorizontalAlignment="Left" Margin="117,27,0,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Width="120" TextChanged="txtoxLogin_TextChanged">
-                <TextBox.ToolTip>
-                    <ToolTip Content="Логин для входа на оборудование"/>
-                </TextBox.ToolTip>
-            </TextBox>
-            <PasswordBox x:Name="txtboxPassword" HorizontalAlignment="Left" Margin="117,50,0,0" VerticalAlignment="Top" Width="120" Password="" PasswordChanged="txtboxPassword_PasswordChanged">
-                <PasswordBox.ToolTip>
-                    <ToolTip Content="Пароль для входа на оборудование"/>
-                </PasswordBox.ToolTip>
-            </PasswordBox>
-            <TextBox x:Name="txtboxIP" HorizontalAlignment="Left" Margin="117,73,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="120" TouchEnter="txtboxIP_TouchEnter">
-                <TextBox.ToolTip>
-                    <ToolTip Content="Путь к файлу с адресами"/>
-                </TextBox.ToolTip>
-            </TextBox>
-            <Button x:Name="btnFileDialog" Content="..." HorizontalAlignment="Left" Margin="242,72,0,0" VerticalAlignment="Top" Click="btnFileDialog_Click">
-                <Button.ToolTip>
-                    <ToolTip Content="Выбрать путь к файлу"/>
-                </Button.ToolTip>
-            </Button>
-            <Button x:Name="btncheckList" Content="Проверить список" HorizontalAlignment="Left" Margin="271,72,0,0" VerticalAlignment="Top" Width="106" Click="btncheckList_Click" IsEnabled="False">
-                <Button.ToolTip>
-                    <ToolTip Content="Проверка добавленных IP адресов из файла"/>
-                </Button.ToolTip>
-            </Button>
-            <TextBox x:Name="txtboxPort" HorizontalAlignment="Left" Margin="117,96,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="23" TextChanged="txtboxPort_TextChanged">
-                <TextBox.ToolTip>
-                    <ToolTip Content="Default = 23"/>
-                </TextBox.ToolTip>
-            </TextBox>
-            <TextBox x:Name="txtboxFilter" HorizontalAlignment="Left" Margin="117,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120">
-                <TextBox.ToolTip>
-                    <ToolTip Content="Поиск данного фрагмента в прцессе выполнения. при нахождении выполняется действие и записывается как ошибка"/>
-                </TextBox.ToolTip>
-            </TextBox>
-            <TextBox x:Name="txtboxWait" HorizontalAlignment="Left" Margin="117,145,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="txtboxWait_TextChanged">
-                <TextBox.ToolTip>
-                    <ToolTip Content="Ожидание введенного фрагмента текста от оборудования. Может быть пустым, Можно установить действие при нахождении"/>
-                </TextBox.ToolTip>
-            </TextBox>
+                    <Label x:Name="lblFindIP" Content="Label" HorizontalAlignment="Left" Margin="266,46,0,0" VerticalAlignment="Top" Visibility="Hidden" Foreground="#FF2DF500"/>
+                    <Label x:Name="lblComAdd" Content="Команды добавлены" HorizontalAlignment="Left" Margin="271,92,0,0" VerticalAlignment="Top" Visibility="Hidden" Height="26"/>
+                </Grid>
 
-            <Button x:Name="btnAddComands" Content="Команды" HorizontalAlignment="Left" Margin="274,115,0,0" VerticalAlignment="Top" Click="btnAddComands_Click">
-                <Button.ToolTip>
-                    <ToolTip Content="Список команд на отправку на оборудование"/>
-                </Button.ToolTip>
-            </Button>
-            <CheckBox x:Name="chkBoxDinChange" Content="Динамическая замена" HorizontalAlignment="Left" Margin="334,118,0,0" VerticalAlignment="Top" IsEnabled="False">
-                <CheckBox.ToolTip>
-                    <ToolTip x:Name="chkBoxDinChangeToopTip" Content="Будет менять фрагмент %%% на на текст из файла с IP адресами"/>
-                </CheckBox.ToolTip>
-            </CheckBox>
-            <Button x:Name="btnCommandAdterfind" Content="Действие" HorizontalAlignment="Left" Margin="327,144,0,0" VerticalAlignment="Top" Click="btnCommandAdterfind_Click" IsEnabled="False"/>
+                <Grid x:Name="UserContent" Margin="0,0,0,224">
+                    <TextBox x:Name="txtoxLogin" HorizontalAlignment="Left" Margin="117,27,0,0" Text="" TextWrapping="NoWrap" VerticalAlignment="Top" Width="120" TextChanged="txtoxLogin_TextChanged">
+                        <TextBox.ToolTip>
+                            <ToolTip Content="Логин для входа на оборудование"/>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                    <PasswordBox x:Name="txtboxPassword" HorizontalAlignment="Left" Margin="117,50,0,0" VerticalAlignment="Top" Width="120" Password="" PasswordChanged="txtboxPassword_PasswordChanged">
+                        <PasswordBox.ToolTip>
+                            <ToolTip Content="Пароль для входа на оборудование"/>
+                        </PasswordBox.ToolTip>
+                    </PasswordBox>
+                    <TextBox x:Name="txtboxIP" HorizontalAlignment="Left" Margin="117,73,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="120" TouchEnter="txtboxIP_TouchEnter">
+                        <TextBox.ToolTip>
+                            <ToolTip Content="Путь к файлу с адресами"/>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                    <Button x:Name="btnFileDialog" Content="..." HorizontalAlignment="Left" Margin="242,72,0,0" VerticalAlignment="Top" Click="btnFileDialog_Click">
+                        <Button.ToolTip>
+                            <ToolTip Content="Выбрать путь к файлу"/>
+                        </Button.ToolTip>
+                    </Button>
+                    <Button x:Name="btncheckList" Content="Проверить список" HorizontalAlignment="Left" Margin="271,72,0,0" VerticalAlignment="Top" Width="106" Click="btncheckList_Click" IsEnabled="False">
+                        <Button.ToolTip>
+                            <ToolTip Content="Проверка добавленных IP адресов из файла"/>
+                        </Button.ToolTip>
+                    </Button>
+                    <TextBox x:Name="txtboxPort" HorizontalAlignment="Left" Margin="117,96,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Text="23" TextChanged="txtboxPort_TextChanged">
+                        <TextBox.ToolTip>
+                            <ToolTip Content="Default = 23"/>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                    <TextBox x:Name="txtboxFilter" HorizontalAlignment="Left" Margin="117,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120">
+                        <TextBox.ToolTip>
+                            <ToolTip Content="Поиск данного фрагмента в прцессе выполнения. при нахождении выполняется действие и записывается как ошибка"/>
+                        </TextBox.ToolTip>
+                    </TextBox>
+                    <TextBox x:Name="txtboxWait" HorizontalAlignment="Left" Margin="117,145,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="txtboxWait_TextChanged">
+                        <TextBox.ToolTip>
+                            <ToolTip Content="Ожидание введенного фрагмента текста от оборудования. Может быть пустым, Можно установить действие при нахождении"/>
+                        </TextBox.ToolTip>
+                    </TextBox>
 
-            <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="429,36,0,0" VerticalAlignment="Top" Click="btnReset_Click">
-                <Button.ToolTip>
-                    <ToolTip Content="Сбросить все значения в программе"/>
-                </Button.ToolTip>
-            </Button>
-            <CheckBox x:Name="chkBoxInvertDisChange" Content="Инвертировать" HorizontalAlignment="Left" Margin="385,147,0,0" VerticalAlignment="Top" IsEnabled="False">
-                <CheckBox.ToolTip>
-                    <ToolTip Content="Будет выполняться в случае, если фрагмент не будет найден"/>
-                </CheckBox.ToolTip>
-            </CheckBox>
-            <CheckBox x:Name="chkBoxSelective" Content="Выборочно" HorizontalAlignment="Left" Margin="242,146,0,0" VerticalAlignment="Top" IsEnabled="False">
-                <CheckBox.ToolTip>
-                    <ToolTip Content="будет поиск только после команды, отмеченной ###. Перед отправкой символы будут удалены"/>
-                </CheckBox.ToolTip>
-            </CheckBox>
-            <Button x:Name="btnSettings" Content="Дополнительно" HorizontalAlignment="Left" Margin="274,25,0,0" VerticalAlignment="Top" Click="btnSettings_Click"/>
+                    <Button x:Name="btnAddComands" Content="Команды" HorizontalAlignment="Left" Margin="274,115,0,0" VerticalAlignment="Top" Click="btnAddComands_Click">
+                        <Button.ToolTip>
+                            <ToolTip Content="Список команд на отправку на оборудование"/>
+                        </Button.ToolTip>
+                    </Button>
+                    <CheckBox x:Name="chkBoxDinChange" Content="Динамическая замена" HorizontalAlignment="Left" Margin="334,118,0,0" VerticalAlignment="Top" IsEnabled="False">
+                        <CheckBox.ToolTip>
+                            <ToolTip x:Name="chkBoxDinChangeToopTip" Content="Будет менять фрагмент %%% на на текст из файла с IP адресами"/>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
+                    <Button x:Name="btnCommandAdterfind" Content="Действие" HorizontalAlignment="Left" Margin="327,144,0,0" VerticalAlignment="Top" Click="btnCommandAdterfind_Click" IsEnabled="False"/>
 
-        </Grid>
+                    <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="429,36,0,0" VerticalAlignment="Top" Click="btnReset_Click">
+                        <Button.ToolTip>
+                            <ToolTip Content="Сбросить все значения в программе"/>
+                        </Button.ToolTip>
+                    </Button>
+                    <CheckBox x:Name="chkBoxInvertDisChange" Content="Инвертировать" HorizontalAlignment="Left" Margin="385,147,0,0" VerticalAlignment="Top" IsEnabled="False">
+                        <CheckBox.ToolTip>
+                            <ToolTip Content="Будет выполняться в случае, если фрагмент не будет найден"/>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
+                    <CheckBox x:Name="chkBoxSelective" Content="Выборочно" HorizontalAlignment="Left" Margin="242,146,0,0" VerticalAlignment="Top" IsEnabled="False">
+                        <CheckBox.ToolTip>
+                            <ToolTip Content="будет поиск только после команды, отмеченной ###. Перед отправкой символы будут удалены"/>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
+                    <Button x:Name="btnSettings" Content="Дополнительно" HorizontalAlignment="Left" Margin="274,25,0,0" VerticalAlignment="Top" Click="btnSettings_Click"/>
 
-        <Grid Margin="0,190,0,140">
-            <Button x:Name="btnRun" Content="Run" HorizontalAlignment="Left" Margin="137,2,0,0" VerticalAlignment="Top" Click="btnRun_Click" IsEnabled="False"/>
-            <Button x:Name="btnTestConnect" Content="TestConnect" HorizontalAlignment="Left" Margin="41,2,0,0" VerticalAlignment="Top" IsEnabled="False" Click="btnTestConnect_Click">
-                <Button.ToolTip>
-                    <ToolTip Content="Тестовое подключение к первому оборудованию в списке"/>
-                </Button.ToolTip>
-            </Button>
-            <Button x:Name="btnShowLog" Content="General Log" HorizontalAlignment="Left" Margin="41,31,0,0" VerticalAlignment="Top" Click="btnShow_Click" IsEnabled="False"/>
+                </Grid>
 
-            <Button x:Name="btnShowLogSuccess" Content="Success Log" HorizontalAlignment="Left" Margin="136,31,0,0" VerticalAlignment="Top" Click="btnShowLogSuccess_Click" IsEnabled="False">
-                <Button.ToolTip>
-                    <ToolTip Content="Лог успешных проходов по оборудованию"/>
-                </Button.ToolTip>
+                <Grid Margin="0,190,0,140">
+                    <Button x:Name="btnRun" Content="Run" HorizontalAlignment="Left" Margin="137,2,0,0" VerticalAlignment="Top" Click="btnRun_Click" IsEnabled="False"/>
+                    <Button x:Name="btnTestConnect" Content="TestConnect" HorizontalAlignment="Left" Margin="41,2,0,0" VerticalAlignment="Top" IsEnabled="False" Click="btnTestConnect_Click">
+                        <Button.ToolTip>
+                            <ToolTip Content="Тестовое подключение к первому оборудованию в списке"/>
+                        </Button.ToolTip>
+                    </Button>
+                    <Button x:Name="btnShowLog" Content="General Log" HorizontalAlignment="Left" Margin="41,31,0,0" VerticalAlignment="Top" Click="btnShow_Click" IsEnabled="False"/>
 
-            </Button>
-            <CheckBox x:Name="chkBoxShowRes" Content="Show Message" HorizontalAlignment="Left" Margin="181,7,0,0" VerticalAlignment="Top" IsEnabled="False">
-                <CheckBox.ToolTip>
-                    <ToolTip Content="Вывод результата после каждой отправки команд"/>
-                </CheckBox.ToolTip>
-            </CheckBox>
+                    <Button x:Name="btnShowLogSuccess" Content="Success Log" HorizontalAlignment="Left" Margin="136,31,0,0" VerticalAlignment="Top" Click="btnShowLogSuccess_Click" IsEnabled="False">
+                        <Button.ToolTip>
+                            <ToolTip Content="Лог успешных проходов по оборудованию"/>
+                        </Button.ToolTip>
 
-            <CheckBox x:Name="chkBoxSaveLogs" Content="Сохранить весь лог" HorizontalAlignment="Left" Margin="216,31,0,0" VerticalAlignment="Top" Checked="chkBoxSaveLogs_Checked">
-                <CheckBox.ToolTip>
-                    <ToolTip Content="Сохранение лога рядом с исходным файлом с адресами"/>
-                </CheckBox.ToolTip>
-            </CheckBox>
+                    </Button>
+                    <CheckBox x:Name="chkBoxShowRes" Content="Show Message" HorizontalAlignment="Left" Margin="181,7,0,0" VerticalAlignment="Top" IsEnabled="False">
+                        <CheckBox.ToolTip>
+                            <ToolTip Content="Вывод результата после каждой отправки команд"/>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
 
-        </Grid>
+                    <CheckBox x:Name="chkBoxSaveLogs" Content="Сохранить весь лог" HorizontalAlignment="Left" Margin="216,31,0,0" VerticalAlignment="Top" Checked="chkBoxSaveLogs_Checked">
+                        <CheckBox.ToolTip>
+                            <ToolTip Content="Сохранение лога рядом с исходным файлом с адресами"/>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
 
-
-        <Grid Margin="0,252,0,0">
-            <ProgressBar x:Name="prgBar" HorizontalAlignment="Left" Height="12" Margin="41,29,0,0" VerticalAlignment="Top" Width="382" Visibility="Hidden" />
-            <Label x:Name="lblProgress" Content="0/0" HorizontalAlignment="Left" Margin="426,22,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
-            <Button x:Name="btnFails" Content="Ошибки:   " HorizontalAlignment="Left" Margin="400,53,0,0" VerticalAlignment="Top" Foreground="#FFF50000"  Click="btnFails_Click" Visibility="Hidden"/>
-            <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="226,53,0,0" VerticalAlignment="Top" Click="btnStop_Click" Height="32" Width="48" IsEnabled="False" Visibility="Hidden"/>
-
-            <Label x:Name="lblStatus" HorizontalAlignment="Left" Margin="41,10,0,0" VerticalAlignment="Top" Foreground="Black"  RenderTransformOrigin="0.262,0.926"/>
-            <Label x:Name="lblClock"  HorizontalAlignment="Left" Margin="41,36,0,0" VerticalAlignment="Top" Content=""/>
-        </Grid>
+                </Grid>
 
 
+                <Grid Margin="0,252,0,0">
+                    <ProgressBar x:Name="prgBar" HorizontalAlignment="Left" Height="12" Margin="41,29,0,0" VerticalAlignment="Top" Width="382" Visibility="Hidden" />
+                    <Label x:Name="lblProgress" Content="0/0" HorizontalAlignment="Left" Margin="426,22,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
+                    <Button x:Name="btnFails" Content="Ошибки:   " HorizontalAlignment="Left" Margin="400,53,0,0" VerticalAlignment="Top" Foreground="#FFF50000"  Click="btnFails_Click" Visibility="Hidden"/>
+                    <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="226,53,0,0" VerticalAlignment="Top" Click="btnStop_Click" Height="32" Width="48" IsEnabled="False" Visibility="Hidden"/>
 
-
+                    <Label x:Name="lblStatus" HorizontalAlignment="Left" Margin="41,10,0,0" VerticalAlignment="Top" Foreground="Black"  RenderTransformOrigin="0.262,0.926"/>
+                    <Label x:Name="lblClock"  HorizontalAlignment="Left" Margin="41,36,0,0" VerticalAlignment="Top" Content=""/>
+                </Grid>
 
 
 
-    </Grid>
+
+
+
+
+            </Grid>
+      
+
 </Window>

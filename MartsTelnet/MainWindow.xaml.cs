@@ -425,7 +425,7 @@ namespace MartsTelnet
             if (txtboxWait.Text != "")
                 session.waitResultInit(txtboxWait.Text, chkBoxSelective.IsChecked.Value);
 
-            session.runCommands(_devices.Values.First());
+            session.runCommands(_devices.Keys.First(),_devices.Values.First());
             MessageBox.Show(session.log);
 
             isEnableElements(true);
@@ -503,37 +503,35 @@ namespace MartsTelnet
             if (_additCommands.Count != 0)
                 session.addAltComands(txtboxWait.Text, _additCommands, chkBoxDinChange.IsChecked.Value, chkBoxInvertDisChange.IsChecked.Value);
 
-            string device;
+            string ip;
 
             //запуск работы цикла
             stopWatch.Start();
             dispatcherTimer.Start();
             foreach (KeyValuePair<string, string> pair in _devices)
             {
-                device = pair.Key;
+                ip = pair.Key;
 
-                lblStatus.Content = device + " - Отправка...";
+                lblStatus.Content = ip + " - Отправка...";
                 if (!isRun)
                 {
                     stopWatch.Stop();
-                    lblStatus.Content = device + " - Процесс остановлен";
+                    lblStatus.Content = ip + " - Процесс остановлен";
                     MessageBox.Show(lblStatus.Content.ToString());
                     _log.Add(_log.Count + ")" + lblStatus.Content);
                     break;
                 }
 
-                session.ip = device;
 
-
-               if (await Task.Run(() => session.runCommands(pair.Value)))
+               if (await Task.Run(() => session.runCommands(ip,pair.Value)))
                {
-                    lblStatus.Content = device + " - Отправлено";
+                    lblStatus.Content = ip + " - Отправлено";
                     lblProgress.Content = (_log.Count - _fails.Count).ToString() + "/" + prgBar.Maximum;
                     _logSuccess.Add(_logSuccess.Count + ")" + session.log);
                }
                 else
                 {
-                    lblStatus.Content = device + " - Ошибка";
+                    lblStatus.Content = ip + " - Ошибка";
                     _fails.Add(_fails.Count + 1 + ")" + session.log);
                     btnFails.Visibility = Visibility.Visible;
                     btnFails.Content = " Ошибки: " + _fails.Count();
@@ -611,6 +609,6 @@ namespace MartsTelnet
                 saveLog();
         }
 
-        
+   
     }
 }

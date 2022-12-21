@@ -12,7 +12,7 @@ namespace MartsTelnet
         string _user;
         string _password;
         int _port;
-        string _ip { get; set; } = string.Empty;
+       
         List<string> _commands;
         List<string> _alterCommands;
 
@@ -34,11 +34,6 @@ namespace MartsTelnet
             get { return _log; }
             set { _log = value; }
         }
-        public string ip
-        {
-            get { return _ip; }
-            set { _ip = value; }
-        }
 
         public int timingLogin
         {
@@ -56,7 +51,7 @@ namespace MartsTelnet
         {
             _user = user;
             _password = password;
-            _ip = ip;
+            
             _port = port;
             _commands = new List<string>();
             _alterCommands = new List<string>();
@@ -226,7 +221,7 @@ namespace MartsTelnet
             return true;
         }
 
-        private bool send (Client client,List <string> commands, string dinComm)
+        private bool send (Client client, string ip, List <string> commands, string dinComm)
         {
             string command;
             // Отправляем на устройство
@@ -258,7 +253,7 @@ namespace MartsTelnet
                 if (_log.Contains(_waitResult))
                 {
                     string[] tmp = _log.Split("\n");
-                    _log = _ip + " - ";
+                    _log = ip + " - ";
 
                     foreach (string row in tmp)
                     {
@@ -268,26 +263,26 @@ namespace MartsTelnet
                 }
                 else
                 {
-                    _log = _ip + "\" " + _waitResult + "\" не найден после ввода команд";
+                    _log = ip + "\" " + _waitResult + "\" не найден после ввода команд";
                     return false;
                 }
             }
             return true;
         }
 
-        public bool runCommands(string dinComm)
+        public bool runCommands(string ip, string dinComm)
         {
-            _log = _ip + "\n";
+            _log = ip + "\n";
             try
             {
-                TcpByteStream tcpByteStream = new TcpByteStream(_ip, _port);
+                TcpByteStream tcpByteStream = new TcpByteStream(ip, _port);
 
                 using (Client client = new Client(tcpByteStream, CancellationToken.None))
                 {
                     if (!autorisacion(client))
                         return false;
 
-                    if (!send(client,_commands, dinComm))
+                    if (!send(client,ip,_commands, dinComm))
                         return false;
 
                     client.Dispose();
