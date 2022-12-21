@@ -370,7 +370,7 @@ namespace MartsTelnet
         private void btnFails_Click(object sender, RoutedEventArgs e)
         {
             ShowList showList = new ShowList("Errors", _fails);
-            showList.Show();
+            showList.ShowDialog();
         }
 
         private void btnFileDialog_Click(object sender, RoutedEventArgs e)
