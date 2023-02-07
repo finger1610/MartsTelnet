@@ -27,7 +27,7 @@ namespace MartsTelnet
         string _key = string.Empty;
 
         int _timingLogin { get; set; } =65; //значение, соответствующее 10 секундам
-        int _timingCommands { get; set; }=19;
+        int _timingCommands { get; set; }=65;
 
         public string log
         {

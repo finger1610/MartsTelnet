@@ -33,7 +33,7 @@ namespace MartsTelnet
             else
             {
                 txtBoxResponseLogPass.Text = "10";
-                txtBoxResponseCommand.Text = "3";
+                txtBoxResponseCommand.Text = "10";
             }
         }
 
@@ -54,7 +54,7 @@ namespace MartsTelnet
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
             txtBoxResponseLogPass.Text = "10";
-            txtBoxResponseCommand.Text = "3";
+            txtBoxResponseCommand.Text = "10";
         }
     }
 }

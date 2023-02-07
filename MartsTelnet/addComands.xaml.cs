@@ -32,7 +32,12 @@ namespace MartsTelnet
             string[] lines = str.Split(new char[] { '\r', '\n' }); 
             foreach (string row in lines)
             {
-                if (row != "")
+                if (chkBoxAutoRemove.IsChecked.Value)
+                {
+                    if (row != "")
+                        _commands.Add(row);
+                }
+                else
                     _commands.Add(row);
             }
             _commands.Add("");

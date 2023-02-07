@@ -23,7 +23,12 @@
             </FlowDocument>
         </RichTextBox>
         <Button x:Name="btnAdd" Content="Добавить команды" HorizontalAlignment="Left" Margin="125,382,0,0" VerticalAlignment="Top" Click="btnAdd_Click"/>
-        <Button x:Name="btnClear" Content="Отчистить" HorizontalAlignment="Left" Margin="393,382,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.365,0.681" Click="btnClear_Click"/>
+        <Button x:Name="btnClear" Content="Отчистить" HorizontalAlignment="Left" Margin="430,381,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.365,0.681" Click="btnClear_Click"/>
+        <CheckBox  x:Name="chkBoxAutoRemove" Content="автоудаление пустых строк" HorizontalAlignment="Left" Margin="240,384,0,0" VerticalAlignment="Top" IsChecked="True">
+            <CheckBox.ToolTip>
+                <ToolTip Content="Автоматическое удаление пустых строк после добавления команд"/>
+            </CheckBox.ToolTip>
+        </CheckBox>
 
     </Grid>
 </Window>
