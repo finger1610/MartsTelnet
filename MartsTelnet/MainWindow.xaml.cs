@@ -540,17 +540,22 @@ namespace MartsTelnet
                     btnFails.Content = " Ошибки: " + _fails.Count();
                 }
 
+
                 if (chkBoxShowRes.IsChecked.Value)
-                    MessageBox.Show(session.log);
+                {
+                  stopWatch.Stop();
+
+                    if (MessageBox.Show(session.log, "Лог " + ip, MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
+                        isRun = false;
+                   stopWatch.Start();
+                }
 
                 _log.Add(_log.Count + ") " + session.log);
                 prgBar.Value++;
             }
 
-            if (stopWatch.IsRunning)
-            {
-                stopWatch.Stop();
-            }
+            if (stopWatch.IsRunning) stopWatch.Stop();
+            
             //  elapsedtimeitem.Items.Add(curentTime);
 
             _log[0] += "Выполнено успешно: " + (_log.Count - 1 - _fails.Count) + "\nВремя выполнения: " + lblClock.Content + "\n" +

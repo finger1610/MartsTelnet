@@ -44,10 +44,7 @@ namespace MartsTelnet
             this.Close();
         }
 
-        private void btnFormat_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+     
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
         {
