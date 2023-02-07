@@ -64,6 +64,7 @@ namespace MartsTelnet
         public void addComands(List<string> commands)
         {
             _commands.Clear();
+            _commands.Add("");
             foreach (string command in commands)
             {
                 _commands.Add(command);
@@ -75,7 +76,7 @@ namespace MartsTelnet
             _isDinamicChange = dinamicChange;
             _isInvertDinChange = invertDinChange;
             _alterCommands.Clear();
-
+            _alterCommands.Add("");
             foreach (string command in commands)
             {
                 _alterCommands.Add(command);

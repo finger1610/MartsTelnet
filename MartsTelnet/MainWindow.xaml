@@ -86,12 +86,12 @@
             </Button>
             <CheckBox x:Name="chkBoxInvertDisChange" Content="Инвертировать" HorizontalAlignment="Left" Margin="385,147,0,0" VerticalAlignment="Top" IsEnabled="False">
                 <CheckBox.ToolTip>
-                    <ToolTip Content="Будет выполняться в случае, если фрагмент не будет найден"/>
+                    <ToolTip Content="Будет выполняться в случае, если фрагмент не будет найден. Рекомендуется использовать с 'Выборочно'"/>
                 </CheckBox.ToolTip>
             </CheckBox>
             <CheckBox x:Name="chkBoxSelective" Content="Выборочно" HorizontalAlignment="Left" Margin="242,146,0,0" VerticalAlignment="Top" IsEnabled="False">
                 <CheckBox.ToolTip>
-                    <ToolTip Content="будет поиск только после команды, отмеченной ###. Перед отправкой символы будут удалены"/>
+                    <ToolTip Content="будет поиск только после команды, отмеченной ###(прим. ###show int). Перед отправкой символы будут удалены"/>
                 </CheckBox.ToolTip>
             </CheckBox>
             <Button x:Name="btnSettings" Content="Дополнительно" HorizontalAlignment="Left" Margin="274,25,0,0" VerticalAlignment="Top" Click="btnSettings_Click"/>
