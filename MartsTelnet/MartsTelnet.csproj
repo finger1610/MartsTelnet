@@ -11,10 +11,15 @@
 
   <ItemGroup>
     <None Remove="logo.ico" />
+    <None Remove="Properties\_ReadMe.txt" />
+    <None Remove="_ReadMe.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="logo.ico" />
+    <Content Include="_ReadMe.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -26,9 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="_ReadMe.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="_Инструкция к программе MartsTelnet.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
