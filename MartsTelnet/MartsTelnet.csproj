@@ -5,12 +5,24 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
-	<ApplicationIcon />
+	<ApplicationIcon>logo.ico</ApplicationIcon>
 	<StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="logo.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Telnet" Version="0.8.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="logo.ico" />
   </ItemGroup>
 
   <ItemGroup>

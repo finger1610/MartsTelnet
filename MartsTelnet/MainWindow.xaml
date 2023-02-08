@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MartsTelnet"
         mc:Ignorable="d"
-        Title="TelnetRunner" Height="449" Width="506" ResizeMode="NoResize" >
+        Title="MartsTelnet" Height="449" Width="506" ResizeMode="NoResize" Icon="/logo.ico" >
 
 
     <Grid x:Name="mainGrid">
