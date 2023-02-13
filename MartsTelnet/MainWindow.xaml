@@ -9,10 +9,7 @@
 
 
     <Grid x:Name="mainGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="401*"/>
-            <ColumnDefinition Width="105*"/>
-        </Grid.ColumnDefinitions>
+
         <Grid x:Name="Lables" Margin="0,0,0,224" Grid.ColumnSpan="2">
             <Label Content="Login" HorizontalAlignment="Left" Margin="73,20,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.641,0.585"/>
             <Label Content="password" HorizontalAlignment="Left" Margin="51,46,0,0" VerticalAlignment="Top"/>
@@ -79,7 +76,7 @@
             </CheckBox>
             <Button x:Name="btnCommandAdterfind" Content="Действие" HorizontalAlignment="Left" Margin="327,144,0,0" VerticalAlignment="Top" Click="btnCommandAdterfind_Click" IsEnabled="False"/>
 
-            <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="429,36,0,0" VerticalAlignment="Top" Click="btnReset_Click">
+            <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="429,49,0,0" VerticalAlignment="Top" Click="btnReset_Click">
                 <Button.ToolTip>
                     <ToolTip Content="Сбросить все значения в программе"/>
                 </Button.ToolTip>
@@ -95,6 +92,11 @@
                 </CheckBox.ToolTip>
             </CheckBox>
             <Button x:Name="btnSettings" Content="Дополнительно" HorizontalAlignment="Left" Margin="274,25,0,0" VerticalAlignment="Top" Click="btnSettings_Click"/>
+            <Button x:Name="btnHelp" Content="?" HorizontalAlignment="Left" Margin="434,20,0,0" VerticalAlignment="Top" Click="btnHelp_Click">
+                <Button.ToolTip>
+                    <ToolTip Content="Справка по работе программы"/>
+                </Button.ToolTip>
+            </Button>
 
         </Grid>
 

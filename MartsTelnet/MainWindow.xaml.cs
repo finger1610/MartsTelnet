@@ -626,6 +626,25 @@ namespace MartsTelnet
                 saveLog();
         }
 
-   
+        private async void btnHelp_Click(object sender, RoutedEventArgs e)
+        {
+            List<string> list = new List<string>();
+            string txt = string.Empty;
+
+           await using (FileStream fs = new FileStream("_ReadMe.txt", FileMode.Open))
+            {
+                using (StreamReader sr = new StreamReader(fs, System.Text.Encoding.UTF8))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        txt+= sr.ReadLine() +"\n";
+                    }
+                }
+            }
+           list.Add(txt);
+            ShowList obj = new ShowList("Help", list);
+            obj.Show();
+
+        }
     }
 }
