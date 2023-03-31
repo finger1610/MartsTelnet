@@ -46,6 +46,11 @@ namespace MartsTelnet
             set { _timingCommands = (int)( value * _timingIndex); }
         }
 
+        public bool isDinChange
+        {
+            get { return _isDinamicChange;}
+            set { _isDinamicChange = value;}
+        }
 
         public myTelnet(string user, string password, string ip, int port, string filter,string key)
         {
@@ -70,10 +75,9 @@ namespace MartsTelnet
                 _commands.Add(command);
             }
         }
-        public void addAltComands(string waitResult,List<string> commands, bool dinamicChange = false,bool invertDinChange = false)
+        public void addAltComands(string waitResult,List<string> commands,bool invertDinChange = false)
         {
             _waitResult = waitResult;
-            _isDinamicChange = dinamicChange;
             _isInvertDinChange = invertDinChange;
             _alterCommands.Clear();
             _alterCommands.Add("");

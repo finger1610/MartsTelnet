@@ -104,7 +104,7 @@ namespace MartsTelnet
                     }
 
                     chkBoxDinChange.IsEnabled = false;
-                    chkBoxDinChange.IsChecked = false;
+
                 }
             }
             else
@@ -142,6 +142,7 @@ namespace MartsTelnet
             chkBoxSaveLogs.IsEnabled = status;
 
             btnReset.IsEnabled = status;
+            btnSettings.IsEnabled = status;
         }
         private void saveLog()
         {
@@ -422,10 +423,12 @@ namespace MartsTelnet
                 session.timingCommands= (int)_timings[1];
             }
             if (_additCommands.Count != 0)
-                session.addAltComands(txtboxWait.Text, _additCommands, chkBoxDinChange.IsChecked.Value, chkBoxInvertDisChange.IsChecked.Value);
+                session.addAltComands(txtboxWait.Text, _additCommands, chkBoxInvertDisChange.IsChecked.Value);
 
             if (txtboxFilter.Text != "")
                 session.addfilter(txtboxFilter.Text);
+
+            session.isDinChange = chkBoxDinChange.IsChecked.Value;
 
             if (txtboxWait.Text != "")
                 session.waitResultInit(txtboxWait.Text, chkBoxSelective.IsChecked.Value);
@@ -505,8 +508,12 @@ namespace MartsTelnet
             if (txtboxWait.Text != "")
                 session.waitResultInit(txtboxWait.Text, chkBoxSelective.IsChecked.Value);
 
+            session.isDinChange = chkBoxDinChange.IsChecked.Value;
+
             if (_additCommands.Count != 0)
-                session.addAltComands(txtboxWait.Text, _additCommands, chkBoxDinChange.IsChecked.Value, chkBoxInvertDisChange.IsChecked.Value);
+                session.addAltComands(txtboxWait.Text, _additCommands, chkBoxInvertDisChange.IsChecked.Value);
+
+ 
 
             string ip;
 
