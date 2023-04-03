@@ -13,26 +13,39 @@ namespace MartsTelnet
     {
        
       readonly  List<string> _IP;
+      readonly Dictionary<string,string> _IpPlus;
         public ShowList(string name,Dictionary<string,string> ip)
         {
            this.Title = name;
+            _IpPlus = new Dictionary<string, string>(ip);
             _IP = new List<string>();
-            foreach (string str in ip.Keys)
+            foreach (string str in _IpPlus.Keys)
             {
                 _IP.Add(str);
             }
             InitializeComponent();
-            lstboxIP.ItemsSource = _IP;
+            showData();
         }
         public ShowList(string name, List<string> ip)
         {
             this.Title = name;
             _IP = ip;
             InitializeComponent();
-            lstboxIP.ItemsSource = _IP;
+            chkBoxShowKey.Visibility = Visibility.Hidden;
+            chkBoxShowKey.IsEnabled= false;
+            showData();
         }
 
-
+        private void showData() //для подмены листа с адресами на лист с адресами+значениями
+        {
+           // lstboxIP.Items.Clear();
+            if (chkBoxShowKey.IsChecked.Value)
+            {
+                lstboxIP.ItemsSource = _IpPlus;
+            }
+            else
+                lstboxIP.ItemsSource = _IP;
+        }
 
         private void lstboxIP_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -80,6 +93,16 @@ namespace MartsTelnet
 
                     break;
             }
+        }
+
+        private void chkBoxShowKey_Checked(object sender, RoutedEventArgs e)
+        {
+            showData();
+        }
+
+        private void chkBoxShowKey_Unchecked(object sender, RoutedEventArgs e)
+        {
+            showData();
         }
     }
     

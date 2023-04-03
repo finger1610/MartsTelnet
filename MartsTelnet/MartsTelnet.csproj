@@ -13,12 +13,16 @@
     <None Remove="logo.ico" />
     <None Remove="Properties\_ReadMe.txt" />
     <None Remove="_ReadMe.txt" />
+    <None Remove="_Инструкция к программе MartsTelnet.docx" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="logo.ico" />
     <Content Include="_ReadMe.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="_Инструкция к программе MartsTelnet.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
@@ -28,12 +32,6 @@
 
   <ItemGroup>
     <Resource Include="logo.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="_Инструкция к программе MartsTelnet.docx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
