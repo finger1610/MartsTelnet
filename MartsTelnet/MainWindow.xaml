@@ -92,11 +92,6 @@
                 </CheckBox.ToolTip>
             </CheckBox>
             <Button x:Name="btnSettings" Content="Дополнительно" HorizontalAlignment="Left" Margin="274,25,0,0" VerticalAlignment="Top" Click="btnSettings_Click"/>
-            <Button x:Name="btnHelp" Content="?" HorizontalAlignment="Left" Margin="434,20,0,0" VerticalAlignment="Top" Click="btnHelp_Click">
-                <Button.ToolTip>
-                    <ToolTip Content="Справка по работе программы"/>
-                </Button.ToolTip>
-            </Button>
 
         </Grid>
 
