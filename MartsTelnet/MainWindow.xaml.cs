@@ -372,6 +372,7 @@ namespace MartsTelnet
         {
             ShowList showList = new ShowList(btnShowLogSuccess.Content.ToString(), _logSuccess);
             showList.ShowDialog();
+
         }
         private void btnFails_Click(object sender, RoutedEventArgs e)
         {
@@ -406,6 +407,7 @@ namespace MartsTelnet
         {
             ShowList obj = new ShowList("List IP addresses", _devices);
             obj.Show();
+  
         }
         private void btnTestConnect_Click(object sender, RoutedEventArgs e)
         {
@@ -434,7 +436,9 @@ namespace MartsTelnet
                 session.waitResultInit(txtboxWait.Text, chkBoxSelective.IsChecked.Value);
 
             session.runCommands(_devices.Keys.First(),_devices.Values.First());
-            MessageBox.Show(session.log);
+            //  MessageBox.Show(session.log);
+            ShowList obj = new ShowList("Resplnce", session.log);
+            obj.Show();
 
             isEnableElements(true);
             checkComlete();
@@ -554,8 +558,10 @@ namespace MartsTelnet
                 {
                   stopWatch.Stop();
 
-                    if (MessageBox.Show(session.log, "Лог " + ip, MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
-                        isRun = false;
+                    //if (MessageBox.Show(session.log, "Лог " + ip, MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
+                    ShowList obj = new ShowList("Responce", session.log);
+                    obj.ShowDialog();
+                    isRun = obj.isOkCancel;
                    stopWatch.Start();
                 }
 

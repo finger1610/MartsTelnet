@@ -7,8 +7,16 @@
         Height="450" Width="800">
     <Grid>
         <ListBox x:Name="lstboxIP" Margin="86,43,86,77" MouseDoubleClick="lstboxIP_MouseDoubleClick" ItemsSource="{Binding}" VirtualizingPanel.ScrollUnit="Pixel"/>
-        <Button x:Name="btn" Content="OK" HorizontalAlignment="Left" Margin="300,383,0,0" VerticalAlignment="Bottom" Click="btn_Click" RenderTransformOrigin="0.85,-1.752" Height="41" Width="61"/>
-        <Button x:Name="btnSaveToFile" Content="Сохранить в файл" HorizontalAlignment="Left" Margin="433,383,0,0" VerticalAlignment="Bottom" Click="btnSaveToFile_Click" Height="41" Width="114"/>
-        <CheckBox x:Name="chkBoxShowKey"  Content="Показать ключи" HorizontalAlignment="Left" Margin="116,393,0,0" VerticalAlignment="Top" Checked="chkBoxShowKey_Checked" Unchecked="chkBoxShowKey_Unchecked"/>
+
+        <CheckBox x:Name="chkBoxShowKey"  Content="Показать значения для подстановки" HorizontalAlignment="Left" Margin="78,376,0,0" VerticalAlignment="Top" Checked="chkBoxShowKey_Checked" Unchecked="chkBoxShowKey_Unchecked">
+            <CheckBox.ToolTip>
+                <ToolTip Content="Отображение значений для динамической замены в коммандах вместо %%%"/>
+            </CheckBox.ToolTip>
+        </CheckBox>
+        
+        <Button x:Name="btnOk" Content="OK" HorizontalAlignment="Left" Margin="304,0,0,17" VerticalAlignment="Bottom" Click="btn_Click" RenderTransformOrigin="0.85,-1.752" Height="41" Width="61" IsDefault="True"/>
+        <Button x:Name="btnSaveToFile" Content="Сохранить в файл" HorizontalAlignment="Left" Margin="400,0,0,17" VerticalAlignment="Bottom" Click="btnSaveToFile_Click" Height="41" Width="114"/>
+        <Button x:Name="btnCancel" Content="Остановить" HorizontalAlignment="Left" Margin="567,0,0,17" VerticalAlignment="Bottom" Click="btnCancel_Click" RenderTransformOrigin="0.85,-1.752" Height="41" Width="89" Visibility="Hidden" IsEnabled="False"/>
+
     </Grid>
 </Window>

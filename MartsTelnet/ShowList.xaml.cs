@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace MartsTelnet
@@ -11,9 +12,14 @@ namespace MartsTelnet
     /// </summary>
     public partial class ShowList : Window
     {
-       
+
+        readonly string _message;
       readonly  List<string> _IP;
       readonly Dictionary<string,string> _IpPlus;
+        bool _isOkCancel = true;
+
+        public bool isOkCancel { get { return _isOkCancel; } }
+
         public ShowList(string name,Dictionary<string,string> ip)
         {
            this.Title = name;
@@ -26,6 +32,8 @@ namespace MartsTelnet
             InitializeComponent();
             showData();
         }
+
+        
         public ShowList(string name, List<string> ip)
         {
             this.Title = name;
@@ -35,6 +43,22 @@ namespace MartsTelnet
             chkBoxShowKey.IsEnabled= false;
             showData();
         }
+
+        
+        public ShowList(string name, string message) //Вместо MessageBox
+        {
+            this.Title = name;
+            InitializeComponent();
+            lstboxIP.Items.Add(message);
+            chkBoxShowKey.Visibility = Visibility.Hidden;
+            chkBoxShowKey.IsEnabled = false;
+            btnCancel.Visibility = Visibility.Visible;
+            btnCancel.IsEnabled = true;
+           
+         
+        }
+
+
 
         private void showData() //для подмены листа с адресами на лист с адресами+значениями
         {
@@ -55,6 +79,7 @@ namespace MartsTelnet
 
         private void btn_Click(object sender, RoutedEventArgs e)
         {
+            _isOkCancel = true;
             this.Close();
         }
 
@@ -103,6 +128,12 @@ namespace MartsTelnet
         private void chkBoxShowKey_Unchecked(object sender, RoutedEventArgs e)
         {
             showData();
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            _isOkCancel = false;
+            this.Close();
         }
     }
     
