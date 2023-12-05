@@ -259,7 +259,9 @@ namespace MartsTelnet
                             if (RegIp.IsMatch(tmp))
                             {
                                 ipTmp = RegIp.Match(tmp).ToString();
-                                valueTmp = tmp.Replace(ipTmp + ' ', "");
+
+                                valueTmp = tmp.Substring(ipTmp.Length + 1);
+                               // valueTmp = tmp.Replace(ipTmp + ' ', ""); //по-хорошему надо вернуть символ после IP и подстаивть его
 
                                 lblFindIP.Content = "Считывание..";
                                 if (!_devices.ContainsKey(ipTmp)) //Проверка на задвоение IP адреса
@@ -476,14 +478,14 @@ namespace MartsTelnet
 
 
             _log.Add("Колличество устройств: " + _devices.Count +
-              "\nКоманды на отправку:\n" + commands +
-              (chkBoxDinChange.IsChecked.Value ? "\nВключена динамическая замена " + _key : string.Empty) +
-             "\nПорт: " + txtboxPort.Text +
-              (txtboxFilter.Text != "" ? "\nФильтр: " + txtboxFilter.Text : string.Empty) +
-              (txtboxWait.Text != "" ? "\nОжидание вывода: " + txtboxWait.Text : string.Empty) + "\n" +
-              (chkBoxInvertDisChange.IsChecked.Value ? "\nВключена инверсия действия от ожидания" : string.Empty) +
-              (_additCommands.Count != 0 ? "\nДействие: " + altcommands : string.Empty) + "\n");
-            _logSuccess.Add("Лог успешных проходов\n");
+              "\rКоманды на отправку:\r" + commands +
+              (chkBoxDinChange.IsChecked.Value ? "\rВключена динамическая замена " + _key : string.Empty) +
+             "\rПорт: " + txtboxPort.Text +
+              (txtboxFilter.Text != "" ? "\rФильтр: " + txtboxFilter.Text : string.Empty) +
+              (txtboxWait.Text != "" ? "\rОжидание вывода: " + txtboxWait.Text : string.Empty) + "\r" +
+              (chkBoxInvertDisChange.IsChecked.Value ? "\rВключена инверсия действия от ожидания" : string.Empty) +
+              (_additCommands.Count != 0 ? "\rДействие: " + altcommands : string.Empty) + "\r");
+            _logSuccess.Add("Лог успешных проходов\r");
 
 
             //отключаем элементы управления
