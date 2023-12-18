@@ -29,6 +29,7 @@
                 <ToolTip Content="Автоматическое удаление пустых строк после добавления команд"/>
             </CheckBox.ToolTip>
         </CheckBox>
+        <Label Content="Для добавления динамической замены используйте %%%" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

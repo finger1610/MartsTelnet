@@ -240,7 +240,7 @@ namespace MartsTelnet
 
             string tmp;
             string ipTmp;
-            string valueTmp;
+            string valueTmp = null;
 
             //резулярное выражение для поиска ip в строке
             System.Text.RegularExpressions.Regex RegIp = new System.Text.RegularExpressions.Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
@@ -260,17 +260,14 @@ namespace MartsTelnet
                             {
                                 ipTmp = RegIp.Match(tmp).ToString();
 
-                                valueTmp = tmp.Substring(ipTmp.Length + 1);
+                                if (tmp.Length>ipTmp.Length)
+                                    valueTmp = tmp.Substring(ipTmp.Length + 1);
                                // valueTmp = tmp.Replace(ipTmp + ' ', ""); //по-хорошему надо вернуть символ после IP и подстаивть его
 
                                 lblFindIP.Content = "Считывание..";
                                 if (!_devices.ContainsKey(ipTmp)) //Проверка на задвоение IP адреса
-                                {
-                                    if (valueTmp != ipTmp)
-                                        _devices.Add(ipTmp, valueTmp);
-                                    else
-                                        _devices.Add(ipTmp, "");
-                                }
+                                    _devices.Add(ipTmp, valueTmp);
+
                             }
                             lblFindIP.Content = "Считывание...";
                         }

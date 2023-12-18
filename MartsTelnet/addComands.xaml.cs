@@ -51,5 +51,7 @@ namespace MartsTelnet
             _commands.Clear();
             this.Close();
         }
+
+        
     }
 }

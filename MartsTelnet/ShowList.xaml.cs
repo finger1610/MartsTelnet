@@ -13,7 +13,7 @@ namespace MartsTelnet
     public partial class ShowList : Window
     {
 
-        readonly string _message;
+    
       readonly  List<string> _IP;
       readonly Dictionary<string,string> _IpPlus;
         bool _isOkCancel = true;
